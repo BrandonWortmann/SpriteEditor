@@ -14,7 +14,6 @@ class ToolBar : public QWidget
 public:
     explicit ToolBar(QWidget *parent = nullptr);
     ~ToolBar();
-
     Ui::ToolBar *ui;
 };
 

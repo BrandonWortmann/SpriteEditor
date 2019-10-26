@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "ui_mainwindow.h"
+#include "ui_animationpreview.h"
+#include "ui_drawframe.h"
+#include "ui_framemanager.h"
 #include "ui_toolbar.h"
 #include <QDockWidget>
 #include <QVBoxLayout>
@@ -12,13 +15,23 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ToolBar tool;
-    toolBar = &tool;
-    toolBar->ui->setupUi(ui->tbWidg);
+    toolBar = new ToolBar;
+    frameManager = new FrameManager;
+    animationPreview = new AnimationPreview;
+    drawFrame = new DrawFrame;
+
+    toolBar->ui->setupUi(ui->tbWidge);
+    frameManager->ui->setupUi(ui->fmWidge);
+    animationPreview->ui->setupUi(ui->apWidge);
+    drawFrame->ui->setupUi(ui->dfWidge);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete toolBar;
+    delete frameManager;
+    delete animationPreview;
+    delete drawFrame;
 }
 

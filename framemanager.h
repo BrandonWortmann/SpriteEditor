@@ -14,8 +14,6 @@ class FrameManager : public QWidget
 public:
     explicit FrameManager(QWidget *parent = nullptr);
     ~FrameManager();
-
-private:
     Ui::FrameManager *ui;
 };
 

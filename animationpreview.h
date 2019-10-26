@@ -14,8 +14,6 @@ class AnimationPreview : public QWidget
 public:
     explicit AnimationPreview(QWidget *parent = nullptr);
     ~AnimationPreview();
-
-private:
     Ui::AnimationPreview *ui;
 };
 

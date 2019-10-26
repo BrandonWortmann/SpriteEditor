@@ -16,15 +16,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    animationpreview.cpp \
+    drawframe.cpp \
+    framemanager.cpp \
     main.cpp \
     mainwindow.cpp \
     toolbar.cpp
 
 HEADERS += \
+    animationpreview.h \
+    drawframe.h \
+    framemanager.h \
     mainwindow.h \
     toolbar.h
 
 FORMS += \
+    animationpreview.ui \
+    drawframe.ui \
+    framemanager.ui \
     mainwindow.ui \
     toolbar.ui
 

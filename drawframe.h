@@ -14,8 +14,6 @@ class DrawFrame : public QWidget
 public:
     explicit DrawFrame(QWidget *parent = nullptr);
     ~DrawFrame();
-
-private:
     Ui::DrawFrame *ui;
 };
 

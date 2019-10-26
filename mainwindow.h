@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include "toolbar.h"
+#include "framemanager.h"
+#include "drawframe.h"
+#include "animationpreview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,5 +22,8 @@ public:
 private:
     Ui::MainWindow *ui;
     ToolBar* toolBar;
+    FrameManager* frameManager;
+    DrawFrame* drawFrame;
+    AnimationPreview* animationPreview;
 };
 #endif // MAINWINDOW_H
