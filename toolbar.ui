@@ -6,37 +6,115 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>111</width>
-    <height>521</height>
+    <width>67</width>
+    <height>731</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QPushButton" name="bucketBtn">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>50</y>
-     <width>101</width>
-     <height>17</height>
+     <y>340</y>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="text">
-    <string>Ahoy there</string>
+    <string>Bucket</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="gridBtn">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>360</y>
-     <width>91</width>
-     <height>20</height>
+     <x>0</x>
+     <y>270</y>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="text">
-    <string>Roger Roger</string>
+    <string>Grid</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="eraserBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>200</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Eraser</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="handBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>130</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hand</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="sizeBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>410</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="colorBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>480</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Color</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pencilBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>60</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pencil</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="toolBarLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ToolBar</string>
    </property>
   </widget>
  </widget>

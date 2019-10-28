@@ -8,6 +8,11 @@
 #include <QDockWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QColor>
+#include <iostream>
+#include <QComboBox>
+
+#include "ui_sizepopup.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,6 +29,17 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
+
+    currDimension = 64;
+    currColor.setRgb(0,0,0,0);
+
+
+    connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
+    connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
+    connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
+    connect(toolBar, &ToolBar::setSize, this, &MainWindow::setSize);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -35,3 +51,12 @@ MainWindow::~MainWindow()
     delete drawFrame;
 }
 
+void MainWindow::setColor(QColor color){
+    currColor = color;
+    std::cout<<currColor.value()<<std::endl;
+}
+
+void MainWindow::setSize(int dimension){
+    std::cout<< " setSize method - mainwindow" << std::endl;
+    currDimension = dimension;
+}

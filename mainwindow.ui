@@ -20,7 +20,7 @@
       <x>10</x>
       <y>20</y>
       <width>111</width>
-      <height>571</height>
+      <height>731</height>
      </rect>
     </property>
    </widget>
@@ -29,28 +29,28 @@
      <rect>
       <x>130</x>
       <y>20</y>
-      <width>561</width>
-      <height>571</height>
+      <width>661</width>
+      <height>731</height>
      </rect>
     </property>
    </widget>
    <widget class="QWidget" name="apWidge" native="true">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>800</x>
       <y>20</y>
       <width>191</width>
-      <height>201</height>
+      <height>231</height>
      </rect>
     </property>
    </widget>
    <widget class="QWidget" name="fmWidge" native="true">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>230</y>
+      <x>800</x>
+      <y>260</y>
       <width>191</width>
-      <height>351</height>
+      <height>491</height>
      </rect>
     </property>
    </widget>

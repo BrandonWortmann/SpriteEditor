@@ -21,6 +21,7 @@ SOURCES += \
     framemanager.cpp \
     main.cpp \
     mainwindow.cpp \
+    sizepopup.cpp \
     toolbar.cpp
 
 HEADERS += \
@@ -28,6 +29,7 @@ HEADERS += \
     drawframe.h \
     framemanager.h \
     mainwindow.h \
+    sizepopup.h \
     toolbar.h
 
 FORMS += \
@@ -35,6 +37,7 @@ FORMS += \
     drawframe.ui \
     framemanager.ui \
     mainwindow.ui \
+    sizepopup.ui \
     toolbar.ui
 
 # Default rules for deployment.

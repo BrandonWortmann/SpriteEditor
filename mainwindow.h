@@ -6,6 +6,7 @@
 #include "framemanager.h"
 #include "drawframe.h"
 #include "animationpreview.h"
+#include "sizepopup.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +19,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QColor currColor;
+    int currDimension;
+
+public slots:
+    void setColor(QColor);
+    void setSize(int);
+
+signals:
+    void colorSelected();
+    void sizeSelected();
 
 private:
     Ui::MainWindow *ui;
@@ -25,5 +36,8 @@ private:
     FrameManager* frameManager;
     DrawFrame* drawFrame;
     AnimationPreview* animationPreview;
+
+
+
 };
 #endif // MAINWINDOW_H
