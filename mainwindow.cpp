@@ -32,12 +32,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     currDimension = 64;
     currColor.setRgb(0,0,0,0);
+    currTool = 0;
+    showGrid = false;
+    showZoom = false;
 
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
     connect(toolBar, &ToolBar::setSize, this, &MainWindow::setSize);
+    connect(toolBar->ui->pencilBtn, &QPushButton::pressed, toolBar, &ToolBar::pencilSelected);
+    connect(toolBar, &ToolBar::setTool, this, &MainWindow::setTool);
+    connect(toolBar->ui->eraserBtn, &QPushButton::pressed, toolBar, &ToolBar::eraserSelected);
+    connect(toolBar->ui->handBtn, &QPushButton::pressed, toolBar, &ToolBar::handSelected);
+    connect(toolBar->ui->bucketBtn, &QPushButton::pressed, toolBar, &ToolBar::bucketSelected);
+    connect(toolBar->ui->gridBtn, &QPushButton::pressed, toolBar, &ToolBar::gridSelected);
+    connect(toolBar, &ToolBar::toggleGrid, this, &MainWindow::toggleGrid);
+    connect(toolBar->ui->zoomBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomSelected);
+    connect(toolBar, &ToolBar::toggleZoom, this, &MainWindow::toggleZoom);
 
     // DrawFrame stuff
     drawFrame->setupFrame();
@@ -56,10 +68,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::setColor(QColor color){
     currColor = color;
-    std::cout<<currColor.value()<<std::endl;
 }
 
 void MainWindow::setSize(int dimension){
-    std::cout<< " setSize method - mainwindow" << std::endl;
     currDimension = dimension;
+}
+
+void MainWindow::setTool(int tool){
+    currTool = tool;
+}
+
+void MainWindow::toggleGrid(){
+    showGrid = !showGrid;
+}
+
+void MainWindow::toggleZoom(){
+    showZoom = !showZoom;
+
 }

@@ -18,7 +18,6 @@ public:
     ~ToolBar();
     Ui::ToolBar *ui;
     QColorDialog colorWheel;
-
     SizePopup *p;
 
    void closeSize();
@@ -26,10 +25,20 @@ public:
 public slots:
     void openSize();
     void colorSelected();
+    void pencilSelected();
+    void handSelected();
+    void eraserSelected();
+    void bucketSelected();
+    void gridSelected();
+    void zoomSelected();
 
 signals:
     void setColor(QColor);
     void setSize(int);
+    void setTool(int);
+    void toggleGrid();
+    void toggleZoom();
+
 };
 
 #endif // TOOLBAR_H

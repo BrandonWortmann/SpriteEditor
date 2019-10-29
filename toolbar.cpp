@@ -49,6 +49,40 @@ void ToolBar::openSize()
 }
 
 
-void ToolBar::closeSize(){
+void ToolBar::closeSize()
+{
     p->close();
+}
+
+void ToolBar::pencilSelected()
+{
+    setTool(0);
+}
+
+void ToolBar::handSelected()
+{
+    setTool(1);
+
+}
+
+void ToolBar::eraserSelected()
+{
+    setTool(2);
+
+}
+
+void ToolBar::bucketSelected()
+{
+    setTool(3);
+
+}
+
+void ToolBar::gridSelected()
+{
+    toggleGrid();
+}
+
+void ToolBar::zoomSelected()
+{
+    toggleZoom();
 }

@@ -21,10 +21,16 @@ public:
     ~MainWindow();
     QColor currColor;
     int currDimension;
+    int currTool;
+    bool showGrid;
+    bool showZoom;
 
 public slots:
     void setColor(QColor);
     void setSize(int);
+    void setTool(int);
+    void toggleGrid();
+    void toggleZoom();
 
 signals:
     void colorSelected();
@@ -36,8 +42,6 @@ private:
     FrameManager* frameManager;
     DrawFrame* drawFrame;
     AnimationPreview* animationPreview;
-
-
 
 };
 #endif // MAINWINDOW_H
