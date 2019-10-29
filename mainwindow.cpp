@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
     connect(toolBar, &ToolBar::setSize, this, &MainWindow::setSize);
 
+    // DrawFrame stuff
+    drawFrame->setupFrame();
+
 
 }
 

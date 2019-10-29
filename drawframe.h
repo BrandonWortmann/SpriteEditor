@@ -2,6 +2,7 @@
 #define DRAWFRAME_H
 
 #include <QWidget>
+#include "drawscene.h"
 
 namespace Ui {
 class DrawFrame;
@@ -12,9 +13,13 @@ class DrawFrame : public QWidget
     Q_OBJECT
 
 public:
-    explicit DrawFrame(QWidget *parent = nullptr);
+    DrawFrame(QWidget *parent = nullptr);
     ~DrawFrame();
     Ui::DrawFrame *ui;
+    void setupFrame();
+
+private:
+    DrawScene* drawScene;
 };
 
 #endif // DRAWFRAME_H

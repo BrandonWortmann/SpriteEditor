@@ -8,6 +8,12 @@ DrawFrame::DrawFrame(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void DrawFrame::setupFrame()
+{
+    drawScene = new DrawScene(this);
+    ui->drawView->setScene(drawScene);
+}
+
 DrawFrame::~DrawFrame()
 {
     delete ui;

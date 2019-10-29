@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     animationpreview.cpp \
     drawframe.cpp \
+    drawscene.cpp \
     framemanager.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 HEADERS += \
     animationpreview.h \
     drawframe.h \
+    drawscene.h \
     framemanager.h \
     mainwindow.h \
     sizepopup.h \
