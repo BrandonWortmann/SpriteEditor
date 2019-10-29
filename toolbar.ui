@@ -117,6 +117,19 @@
     <string>ToolBar</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="zoomBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>550</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Zoom</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
