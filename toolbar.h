@@ -31,11 +31,13 @@ public slots:
     void bucketSelected();
     void gridSelected();
     void zoomSelected();
+    void pencilSizeChanged(int value);
 
 signals:
     void setColor(QColor);
     void setSize(int);
     void setTool(int);
+    void setPencilSize(int);
     void toggleGrid();
     void toggleZoom();
 

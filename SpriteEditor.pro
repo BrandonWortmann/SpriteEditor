@@ -20,6 +20,7 @@ SOURCES += \
     drawframe.cpp \
     drawscene.cpp \
     framemanager.cpp \
+    helppopup.cpp \
     main.cpp \
     mainwindow.cpp \
     sizepopup.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     drawframe.h \
     drawscene.h \
     framemanager.h \
+    helppopup.h \
     mainwindow.h \
     sizepopup.h \
     toolbar.h
@@ -38,6 +40,7 @@ FORMS += \
     animationpreview.ui \
     drawframe.ui \
     framemanager.ui \
+    helppopup.ui \
     mainwindow.ui \
     sizepopup.ui \
     toolbar.ui

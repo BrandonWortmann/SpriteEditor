@@ -13,14 +13,11 @@ ToolBar::ToolBar(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-
     p = new SizePopup();
-
     connect(p->ui->comboBox, QOverload<int>::of(&QComboBox::activated),
             [=](int index)
     {
-        QStringList sizeOptions = {"16","32","64", "128"};
+        QStringList sizeOptions = {"4","16","32","64", "128"};
 
         int size = sizeOptions[index].toInt();
 
@@ -85,4 +82,9 @@ void ToolBar::gridSelected()
 void ToolBar::zoomSelected()
 {
     toggleZoom();
+}
+
+void ToolBar::pencilSizeChanged(int size)
+{
+    setPencilSize(size);
 }
