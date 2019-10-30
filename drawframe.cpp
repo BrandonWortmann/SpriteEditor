@@ -18,3 +18,28 @@ DrawFrame::~DrawFrame()
 {
     delete ui;
 }
+
+void DrawFrame::setSize(int size)
+{
+ //TODO: Set size
+}
+void DrawFrame::setcolor(QColor color)
+{
+    //TODO: SetColor
+}
+void DrawFrame::setPencilSize(int size)
+{
+    //TODO: set pencil size
+}
+void DrawFrame::gridToggle()
+{
+    //TODO: toogle grid
+}
+void DrawFrame::setTool(int tool)
+{
+    //TODO: tool
+}
+void DrawFrame::zoom(bool zoom)
+{
+    //TODO: zoom
+}

@@ -30,14 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
-
-    currDimension = 64;
-    currColor.setRgb(0,0,0,0);
-    currTool = 0;
-    pencilSize = 0;
-    showGrid = false;
-    showZoom = false;
-
     drawFrame->setupFrame();
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
@@ -76,29 +68,35 @@ MainWindow::~MainWindow()
     delete help;
 }
 
-void MainWindow::setColor(QColor color){
-    currColor = color;
+void MainWindow::setColor(QColor color)
+{
+    drawFrame->setcolor(color);
 }
 
-void MainWindow::setSize(int dimension){
-    currDimension = dimension;
+void MainWindow::setSize(int dimension)
+{
+    drawFrame->setSize(dimension);
 }
 
-void MainWindow::setTool(int tool){
-    currTool = tool;
+void MainWindow::setTool(int tool)
+{
+    drawFrame->setTool(tool);
 }
 
-void MainWindow::toggleGrid(){
-    showGrid = !showGrid;
+void MainWindow::toggleGrid()
+{
+    drawFrame->gridToggle();
 }
 
-void MainWindow::toggleZoom(){
-    showZoom = !showZoom;
+void MainWindow::toggleZoom()
+{
+   // showZoom = !showZoom;
+    //TODO: add zoom out button
 }
 
 void MainWindow::setPencilSize(int size)
 {
-    pencilSize = size;
+    drawFrame->setPencilSize(size);
 }
 
 void MainWindow::newSprite()

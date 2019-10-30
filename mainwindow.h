@@ -23,14 +23,6 @@ public:
 
     HelpPopup *help;
 
-    QColor currColor;
-    int currDimension;
-    int currTool;
-    int pencilSize;
-    bool showGrid;
-    bool showZoom;
-
-
 public slots:
     void setColor(QColor);
     void setSize(int);
