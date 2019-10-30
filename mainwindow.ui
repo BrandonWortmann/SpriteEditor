@@ -85,6 +85,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionExport"/>
+    <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="helpMenu">
     <property name="title">
@@ -124,6 +125,11 @@
   <action name="actionHelp">
    <property name="text">
     <string>Sprite Help</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
    </property>
   </action>
  </widget>

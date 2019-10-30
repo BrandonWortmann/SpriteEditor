@@ -43,7 +43,9 @@ public slots:
     void saveSprite();
     void saveAsSprite();
     void exportSprite();
+    void closeSprite();
     void openHelpMenu();
+
 
 signals:
     void colorSelected();

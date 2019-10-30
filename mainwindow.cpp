@@ -11,7 +11,7 @@
 #include <QColor>
 #include <iostream>
 #include <QComboBox>
-
+#include <QFileDialog>
 #include "ui_sizepopup.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     showGrid = false;
     showZoom = false;
 
+    drawFrame->setupFrame();
+
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
@@ -51,7 +53,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar, &ToolBar::toggleGrid, this, &MainWindow::toggleGrid);
     connect(toolBar->ui->zoomBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomSelected);
     connect(toolBar, &ToolBar::toggleZoom, this, &MainWindow::toggleZoom);
-    drawFrame->setupFrame();
     connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
     connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
@@ -59,7 +60,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSprite);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsSprite);
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
+    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
+
 
 }
 
@@ -106,6 +109,12 @@ void MainWindow::newSprite()
 void MainWindow::openSprite()
 {
     std::cout<<"open"<<std::endl;
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
+    std::string convert = filename.toStdString();
+    std::cout<<convert<<std::endl;
+    //check if filename matches format (Json and sqare)
+
 }
 
 void MainWindow::saveSprite()
@@ -121,6 +130,11 @@ void MainWindow::saveAsSprite()
 void MainWindow::exportSprite()
 {
     std::cout<<"export"<<std::endl;
+}
+
+void MainWindow::closeSprite()
+{
+    this->close();
 }
 
 void MainWindow::openHelpMenu()
