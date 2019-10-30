@@ -7,6 +7,7 @@
 #include "drawframe.h"
 #include "animationpreview.h"
 #include "sizepopup.h"
+#include "helppopup.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,18 +20,30 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    HelpPopup *help;
+
     QColor currColor;
     int currDimension;
     int currTool;
+    int pencilSize;
     bool showGrid;
     bool showZoom;
+
 
 public slots:
     void setColor(QColor);
     void setSize(int);
     void setTool(int);
+    void setPencilSize(int);
     void toggleGrid();
     void toggleZoom();
+    void newSprite();
+    void openSprite();
+    void saveSprite();
+    void saveAsSprite();
+    void exportSprite();
+    void openHelpMenu();
 
 signals:
     void colorSelected();

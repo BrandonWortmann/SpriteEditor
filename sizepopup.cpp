@@ -10,7 +10,7 @@ SizePopup::SizePopup(QWidget *parent) :
     ui(new Ui::SizePopup)
 {
     ui->setupUi(this);
-    QStringList sizeOptions = {"16x16","32x32","64x64", "128x128"};
+    QStringList sizeOptions = {"4x4","16x16","32x32","64x64", "128x128"};
     ui->comboBox->addItems(sizeOptions);
 
 

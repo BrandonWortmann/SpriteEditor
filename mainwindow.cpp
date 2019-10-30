@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager = new FrameManager;
     animationPreview = new AnimationPreview;
     drawFrame = new DrawFrame;
+    help = new HelpPopup;
 
     toolBar->ui->setupUi(ui->tbWidge);
     frameManager->ui->setupUi(ui->fmWidge);
@@ -33,9 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
     currDimension = 64;
     currColor.setRgb(0,0,0,0);
     currTool = 0;
+    pencilSize = 0;
     showGrid = false;
     showZoom = false;
-
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
@@ -50,7 +51,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar, &ToolBar::toggleGrid, this, &MainWindow::toggleGrid);
     connect(toolBar->ui->zoomBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomSelected);
     connect(toolBar, &ToolBar::toggleZoom, this, &MainWindow::toggleZoom);
-
+    connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
+    connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openSprite);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSprite);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsSprite);
+    connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
+    connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
 
 }
 
@@ -61,6 +69,7 @@ MainWindow::~MainWindow()
     delete frameManager;
     delete animationPreview;
     delete drawFrame;
+    delete help;
 }
 
 void MainWindow::setColor(QColor color){
@@ -81,5 +90,39 @@ void MainWindow::toggleGrid(){
 
 void MainWindow::toggleZoom(){
     showZoom = !showZoom;
+}
 
+void MainWindow::setPencilSize(int size)
+{
+    pencilSize = size;
+}
+
+void MainWindow::newSprite()
+{
+    std::cout<<"new"<<std::endl;
+}
+
+void MainWindow::openSprite()
+{
+    std::cout<<"open"<<std::endl;
+}
+
+void MainWindow::saveSprite()
+{
+    std::cout<<"save"<<std::endl;
+}
+
+void MainWindow::saveAsSprite()
+{
+    std::cout<<"saveAs"<<std::endl;
+}
+
+void MainWindow::exportSprite()
+{
+    std::cout<<"export"<<std::endl;
+}
+
+void MainWindow::openHelpMenu()
+{
+    help->show();
 }
