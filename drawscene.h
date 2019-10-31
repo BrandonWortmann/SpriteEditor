@@ -13,6 +13,7 @@ public:
     void update();
     void setTool(int tool);
     void setColor(QColor color);
+    void gridToggle();
 
 private:
     // data members
@@ -24,7 +25,7 @@ private:
     QPoint prevPoint;
     //methods
     void addPoint(QPoint point);
-    void setGrid(bool grid);
+
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

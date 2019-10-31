@@ -33,7 +33,8 @@ void DrawFrame::setPencilSize(int size)
 }
 void DrawFrame::gridToggle()
 {
-    //TODO: toogle grid
+    drawScene->gridToggle();
+    drawScene->update();
 }
 void DrawFrame::setTool(int tool)
 {
