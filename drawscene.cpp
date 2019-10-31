@@ -3,7 +3,7 @@
 
 DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
 {
-    size = 64;
+    size = 32;
     zoom = size;
     frame = new QImage(QSize(size, size), QImage::Format_ARGB32);
     color = Qt::black;
@@ -11,6 +11,7 @@ DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
     setSceneRect(0, 0, 514, 514);
     grid = false;
     tlx = tly = 0;
+    tool = pencil;
     update();
 }
 
@@ -56,15 +57,18 @@ void DrawScene::update()
     }
 }
 
-void DrawScene::gridToggle()
-{
-    grid = !grid;
-}
 
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QPoint point = event->scenePos().toPoint();
-    addPoint(point);
+    if(tool == pencil || tool == eraser)
+    {
+        addPoint(point);
+    }
+    else if(tool == bucket)
+    {
+        fill(point);
+    }
     mousePressed = true;
     prevPoint = point;
 }
@@ -76,7 +80,7 @@ void DrawScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (mousePressed)
+    if (mousePressed && (tool == pencil || tool == eraser))
     {
         QPoint point = event->scenePos().toPoint();
         double xDiff = point.x() - prevPoint.x();
@@ -99,18 +103,120 @@ void DrawScene::addPoint(QPoint point)
 {
     if (point.x() >= 0 && point.x() < 512 && point.y() >= 0 && point.y() < 512)
     {
-        frame->setPixelColor(((point.x() * zoom) / 512) + tlx, ((point.y() * zoom) / 512) + tly, color);
+        int x = (point.x() * zoom) / 512;
+        int y = (point.y() * zoom) / 512;
         int pixSize = (512 / zoom) - 1;
         if (grid)
         {
             pixSize -= 1;
         }
-        addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
+        if(tool == pencil)
+        {
+            frame->setPixelColor(x + tlx, y + tly, color);
+            addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
                 pixSize, pixSize, QPen(color), QBrush(color, Qt::BrushStyle::SolidPattern));
+        }
+        else if(tool == eraser)
+        {
+            frame->setPixelColor(x + tlx, y + tly, QColor(0,0,0,0));
+            if(grid && (x + y) % 2 == 1)
+            {
+                addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
+                    pixSize, pixSize, QPen(Qt::lightGray), QBrush(Qt::lightGray, Qt::BrushStyle::SolidPattern));
+            }
+            else
+            {
+                addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
+                    pixSize, pixSize, QPen(Qt::white), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
+            }
+        }
+    }
+}
+
+void DrawScene::fill(QPoint point)
+{
+    QPoint currPoint = QPoint(((point.x() * zoom) / 512) + tlx, ((point.y() * zoom) / 512) + tly);
+    QColor currColor = frame->pixelColor(currPoint);
+    if(currColor == color)
+    {
+        return;
+    }
+    fillHelper(currPoint, currColor);
+    update();
+}
+
+void DrawScene::fillHelper(QPoint point, QColor currColor)
+{
+    frame->setPixelColor(point, color);
+    QPoint leftPoint(point.x() - 1, point.y());
+    QPoint upPoint(point.x(), point.y() - 1);
+    QPoint rightPoint(point.x() + 1, point.y());
+    QPoint downPoint(point.x(), point.y() + 1);
+    if (leftPoint.x() >= 0 && frame->pixelColor(leftPoint) == currColor)
+    {
+        fillHelper(leftPoint, currColor);
+    }
+    if (upPoint.y() >= 0 && frame->pixelColor(upPoint) == currColor)
+    {
+        fillHelper(upPoint, currColor);
+    }
+    if (rightPoint.x() < size && frame->pixelColor(rightPoint) == currColor)
+    {
+        fillHelper(rightPoint, currColor);
+    }
+    if (downPoint.y() < size && frame->pixelColor(downPoint) == currColor)
+    {
+        fillHelper(downPoint, currColor);
     }
 }
 
 void DrawScene::setColor(QColor c)
 {
     color = c;
+}
+
+void DrawScene::setTool(int toolNum)
+{
+    switch(toolNum)
+    {
+    case 0:
+        tool = pencil;
+        break;
+
+    case 1:
+        tool = hand;
+        break;
+
+    case 2:
+        tool = eraser;
+        break;
+
+    case 3:
+        tool = bucket;
+        break;
+
+    default:
+        tool = undefined;
+        break;
+    }
+}
+
+void DrawScene::gridToggle()
+{
+    grid = !grid;
+}
+
+void DrawScene::setSize(int size)
+{
+    //TODO; Set size
+}
+
+void DrawScene::setPencilSize(int size)
+{
+
+}
+
+void DrawScene::zoomScene(bool in)
+{
+
 }
