@@ -21,6 +21,7 @@ public:
     SizePopup *p;
 
    void closeSize();
+   void setBtnColor(QColor);
 
 public slots:
     void openSize();

@@ -15,6 +15,7 @@
 #include "ui_sizepopup.h"
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
     drawFrame->setupFrame();
+
+    QColor black(0,0,0,255);
+    toolBar->setBtnColor(black);
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
@@ -84,6 +88,11 @@ void MainWindow::setSize(int dimension)
 
 void MainWindow::setTool(int tool)
 {
+    toolBar->ui->pencilBtn->setChecked(false);
+    toolBar->ui->handBtn->setChecked(false);
+    toolBar->ui->eraserBtn->setChecked(false);
+    toolBar->ui->bucketBtn->setChecked(false);
+
     drawFrame->setTool(tool);
 }
 
