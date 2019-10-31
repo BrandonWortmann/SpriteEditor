@@ -25,7 +25,7 @@ void DrawFrame::setSize(int size)
 }
 void DrawFrame::setcolor(QColor color)
 {
-    //TODO: SetColor
+    drawScene->setColor(color);
 }
 void DrawFrame::setPencilSize(int size)
 {

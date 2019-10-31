@@ -104,3 +104,8 @@ void DrawScene::addPoint(QPoint point)
                 pixSize, pixSize, QPen(color), QBrush(color, Qt::BrushStyle::SolidPattern));
     }
 }
+
+void DrawScene::setColor(QColor c)
+{
+    color = c;
+}
