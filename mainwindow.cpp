@@ -38,9 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->currLabel->setText("Thotto begonno");
 
 
-    QImage* image1 = new QImage("../SpriteEditor/goofy.png");
-    QImage* image2 = new QImage("../SpriteEditor/pencil.png");
-    QImage* image3 = new QImage("../SpriteEditor/papafranku.png");
+    QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
+    QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
+    QImage* image3 = new QImage("../SpriteEditor/icons/papafranku.png");
     frameManager->ui->prevLabel->setPixmap(QPixmap::fromImage(*image1));
     frameManager->ui->prevLabel->setScaledContents(true);
     frameManager->ui->currLabel->setPixmap(QPixmap::fromImage(*image2));
