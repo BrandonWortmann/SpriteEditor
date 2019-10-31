@@ -15,6 +15,11 @@ FrameManager::FrameManager(QWidget *parent) :
 //    ui->nextLabel->show();
 //    frames.push_back(new QImage());
 
+    QImage* startingImage = new QImage();
+    frames.push_back(startingImage);
+
+    changeCurrFrame(startingImage);
+
 
 }
 

@@ -16,23 +16,23 @@
   <widget class="QLabel" name="prevLabel">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>40</y>
-     <width>161</width>
-     <height>81</height>
+     <x>100</x>
+     <y>10</y>
+     <width>150</width>
+     <height>150</height>
     </rect>
    </property>
    <property name="text">
-    <string>I'll fuckin do it again</string>
+    <string>Got em m80</string>
    </property>
   </widget>
   <widget class="QLabel" name="currLabel">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>40</y>
-     <width>161</width>
-     <height>81</height>
+     <x>280</x>
+     <y>10</y>
+     <width>150</width>
+     <height>150</height>
     </rect>
    </property>
    <property name="text">
@@ -42,10 +42,10 @@
   <widget class="QLabel" name="nextLabel">
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>40</y>
-     <width>161</width>
-     <height>81</height>
+     <x>460</x>
+     <y>10</y>
+     <width>150</width>
+     <height>150</height>
     </rect>
    </property>
    <property name="text">
