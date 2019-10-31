@@ -13,6 +13,8 @@
 #include <QComboBox>
 #include <QFileDialog>
 #include "ui_sizepopup.h"
+#include <QJsonDocument>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,8 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar->ui->bucketBtn, &QPushButton::pressed, toolBar, &ToolBar::bucketSelected);
     connect(toolBar->ui->gridBtn, &QPushButton::pressed, toolBar, &ToolBar::gridSelected);
     connect(toolBar, &ToolBar::toggleGrid, this, &MainWindow::toggleGrid);
-    connect(toolBar->ui->zoomBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomSelected);
-    connect(toolBar, &ToolBar::toggleZoom, this, &MainWindow::toggleZoom);
+    connect(toolBar->ui->zoomInBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomInSelected);
+    connect(toolBar->ui->zoomOutBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomOutSelected);
+    connect(toolBar, &ToolBar::toggleZoomIn, this, &MainWindow::toggleZoomIn);
+    connect(toolBar, &ToolBar::toggleZoomOut, this, &MainWindow::toggleZoomOut);
     connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
     connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
@@ -88,10 +92,16 @@ void MainWindow::toggleGrid()
     drawFrame->gridToggle();
 }
 
-void MainWindow::toggleZoom()
+void MainWindow::toggleZoomIn()
 {
-   // showZoom = !showZoom;
-    //TODO: add zoom out button
+    drawFrame->zoom(true);
+    std::cout<< "zoom in";
+}
+
+void MainWindow::toggleZoomOut()
+{
+    drawFrame->zoom(false);
+    std::cout<< "zoom out";
 }
 
 void MainWindow::setPencilSize(int size)
@@ -110,9 +120,30 @@ void MainWindow::openSprite()
 
     QString filename = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
     std::string convert = filename.toStdString();
-    std::cout<<convert<<std::endl;
-    //check if filename matches format (Json and sqare)
+    QFile file(filename);
+    QString allText;
+    if(file.exists())
+    {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        allText = file.readAll();
+        file.close();
 
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(allText.toUtf8());
+
+        if(jsonDoc.isNull()){
+            std::cout<<"jsonDoc is null"<<std::endl;
+        }
+
+        QJsonArray jsonArr = jsonDoc.array();
+
+        for(int i = 0; i < jsonArr.size(); i++)
+        {
+         QJsonValue val = jsonArr.at(i);
+        }
+    }
+    else{
+        std::cout<<"File does not exist." << std::endl;
+    }
 }
 
 void MainWindow::saveSprite()

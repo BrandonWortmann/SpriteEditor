@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include "sizepopup.h"
-
+#include <QPalette>
 ToolBar::ToolBar(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ToolBar)
@@ -25,6 +25,7 @@ ToolBar::ToolBar(QWidget *parent) :
         closeSize();
     });
 
+    defaultColor.setRgb(255,255,255,0);
 }
 
 ToolBar::~ToolBar()
@@ -36,8 +37,16 @@ ToolBar::~ToolBar()
 
 
 void ToolBar::colorSelected(){
+    QColorDialog colorWheel(defaultColor, nullptr);
     QColor selectedColor = colorWheel.getColor();
     setColor(selectedColor);
+    defaultColor = selectedColor;
+
+    QPalette pal = ui->colorBtn->palette();
+    pal.setColor(QPalette::Button, QColor(selectedColor));
+    ui->colorBtn->setAutoFillBackground(true);
+    ui->colorBtn->setPalette(pal);
+    ui->colorBtn->update();
 }
 
 void ToolBar::openSize()
@@ -79,12 +88,18 @@ void ToolBar::gridSelected()
     toggleGrid();
 }
 
-void ToolBar::zoomSelected()
+void ToolBar::zoomInSelected()
 {
-    toggleZoom();
+    toggleZoomIn();
+}
+
+void ToolBar::zoomOutSelected()
+{
+    toggleZoomOut();
 }
 
 void ToolBar::pencilSizeChanged(int size)
 {
     setPencilSize(size);
 }
+

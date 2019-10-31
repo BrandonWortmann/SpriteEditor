@@ -1,5 +1,6 @@
 #include "drawframe.h"
 #include "ui_drawframe.h"
+#include <QFileDialog>
 
 DrawFrame::DrawFrame(QWidget *parent) :
     QWidget(parent),
@@ -42,4 +43,5 @@ void DrawFrame::setTool(int tool)
 void DrawFrame::zoom(bool zoom)
 {
     //TODO: zoom
+
 }

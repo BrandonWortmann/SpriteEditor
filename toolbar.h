@@ -17,7 +17,7 @@ public:
     explicit ToolBar(QWidget *parent = nullptr);
     ~ToolBar();
     Ui::ToolBar *ui;
-    QColorDialog colorWheel;
+    QColor defaultColor;
     SizePopup *p;
 
    void closeSize();
@@ -30,7 +30,8 @@ public slots:
     void eraserSelected();
     void bucketSelected();
     void gridSelected();
-    void zoomSelected();
+    void zoomInSelected();
+    void zoomOutSelected();
     void pencilSizeChanged(int value);
 
 signals:
@@ -39,7 +40,8 @@ signals:
     void setTool(int);
     void setPencilSize(int);
     void toggleGrid();
-    void toggleZoom();
+    void toggleZoomIn();
+    void toggleZoomOut();
 
 };
 
