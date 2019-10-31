@@ -29,7 +29,7 @@ void DrawFrame::setcolor(QColor color)
 }
 void DrawFrame::setPencilSize(int size)
 {
-    //TODO: set pencil size
+    drawScene->setPencilSize(size);
 }
 void DrawFrame::gridToggle()
 {
@@ -38,9 +38,9 @@ void DrawFrame::gridToggle()
 }
 void DrawFrame::setTool(int tool)
 {
-    //TODO: tool
+    drawScene->setTool(tool);
 }
 void DrawFrame::zoom(bool zoom)
 {
-    //TODO: zoom
+    drawScene->zoomScene(zoom);
 }
