@@ -123,17 +123,17 @@
     <string>ToolBar</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="zoomBtn">
+  <widget class="QPushButton" name="zoomInBtn">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>590</y>
      <width>60</width>
-     <height>60</height>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
-    <string>Zoom</string>
+    <string>Zoom +</string>
    </property>
   </widget>
   <widget class="QSlider" name="pSizeSlider">
@@ -156,6 +156,19 @@
    </property>
    <property name="tickInterval">
     <number>9</number>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="zoomOutBtn">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>620</y>
+     <width>60</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Zoom -</string>
    </property>
   </widget>
  </widget>
