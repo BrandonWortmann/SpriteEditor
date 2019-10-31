@@ -3,13 +3,13 @@
 
 DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
 {
-    size = 128;
+    size = 64;
     zoom = size;
     frame = new QImage(QSize(size, size), QImage::Format_ARGB32);
-    color = Qt::green;
+    color = Qt::black;
     mousePressed = false;
     setSceneRect(0, 0, 514, 514);
-    grid = true;
+    grid = false;
     tlx = tly = 0;
     update();
 }
@@ -54,6 +54,11 @@ void DrawScene::update()
                     QBrush(frame->pixelColor(i, j), Qt::BrushStyle::SolidPattern));
         }
     }
+}
+
+void DrawScene::gridToggle()
+{
+    grid = !grid;
 }
 
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -103,4 +108,9 @@ void DrawScene::addPoint(QPoint point)
         addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
                 pixSize, pixSize, QPen(color), QBrush(color, Qt::BrushStyle::SolidPattern));
     }
+}
+
+void DrawScene::setColor(QColor c)
+{
+    color = c;
 }
