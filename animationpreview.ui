@@ -3,7 +3,7 @@
  <comment/>
  <exportmacro/>
  <class>AnimationPreview</class>
- <widget name="AnimationPreview" class="QWidget">
+ <widget class="QWidget" name="AnimationPreview">
   <property name="geometry">
    <rect>
     <x>0</x>
