@@ -11,8 +11,10 @@
 #include <QColor>
 #include <iostream>
 #include <QComboBox>
-
+#include <QFileDialog>
 #include "ui_sizepopup.h"
+#include <QJsonDocument>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,13 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
-
-    currDimension = 64;
-    currColor.setRgb(0,0,0,0);
-    currTool = 0;
-    pencilSize = 0;
-    showGrid = false;
-    showZoom = false;
+    drawFrame->setupFrame();
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
@@ -49,9 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar->ui->bucketBtn, &QPushButton::pressed, toolBar, &ToolBar::bucketSelected);
     connect(toolBar->ui->gridBtn, &QPushButton::pressed, toolBar, &ToolBar::gridSelected);
     connect(toolBar, &ToolBar::toggleGrid, this, &MainWindow::toggleGrid);
-    connect(toolBar->ui->zoomBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomSelected);
-    connect(toolBar, &ToolBar::toggleZoom, this, &MainWindow::toggleZoom);
-    drawFrame->setupFrame();
+    connect(toolBar->ui->zoomInBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomInSelected);
+    connect(toolBar->ui->zoomOutBtn, &QPushButton::pressed, toolBar, &ToolBar::zoomOutSelected);
+    connect(toolBar, &ToolBar::toggleZoomIn, this, &MainWindow::toggleZoomIn);
+    connect(toolBar, &ToolBar::toggleZoomOut, this, &MainWindow::toggleZoomOut);
     connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
     connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
@@ -59,7 +56,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSprite);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsSprite);
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
+    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
+
 
 }
 
@@ -73,29 +72,41 @@ MainWindow::~MainWindow()
     delete help;
 }
 
-void MainWindow::setColor(QColor color){
-    currColor = color;
+void MainWindow::setColor(QColor color)
+{
+    drawFrame->setcolor(color);
 }
 
-void MainWindow::setSize(int dimension){
-    currDimension = dimension;
+void MainWindow::setSize(int dimension)
+{
+    drawFrame->setSize(dimension);
 }
 
-void MainWindow::setTool(int tool){
-    currTool = tool;
+void MainWindow::setTool(int tool)
+{
+    drawFrame->setTool(tool);
 }
 
-void MainWindow::toggleGrid(){
-    showGrid = !showGrid;
+void MainWindow::toggleGrid()
+{
+    drawFrame->gridToggle();
 }
 
-void MainWindow::toggleZoom(){
-    showZoom = !showZoom;
+void MainWindow::toggleZoomIn()
+{
+    drawFrame->zoom(true);
+    std::cout<< "zoom in";
+}
+
+void MainWindow::toggleZoomOut()
+{
+    drawFrame->zoom(false);
+    std::cout<< "zoom out";
 }
 
 void MainWindow::setPencilSize(int size)
 {
-    pencilSize = size;
+    drawFrame->setPencilSize(size);
 }
 
 void MainWindow::newSprite()
@@ -106,6 +117,33 @@ void MainWindow::newSprite()
 void MainWindow::openSprite()
 {
     std::cout<<"open"<<std::endl;
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
+    std::string convert = filename.toStdString();
+    QFile file(filename);
+    QString allText;
+    if(file.exists())
+    {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        allText = file.readAll();
+        file.close();
+
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(allText.toUtf8());
+
+        if(jsonDoc.isNull()){
+            std::cout<<"jsonDoc is null"<<std::endl;
+        }
+
+        QJsonArray jsonArr = jsonDoc.array();
+
+        for(int i = 0; i < jsonArr.size(); i++)
+        {
+         QJsonValue val = jsonArr.at(i);
+        }
+    }
+    else{
+        std::cout<<"File does not exist." << std::endl;
+    }
 }
 
 void MainWindow::saveSprite()
@@ -121,6 +159,11 @@ void MainWindow::saveAsSprite()
 void MainWindow::exportSprite()
 {
     std::cout<<"export"<<std::endl;
+}
+
+void MainWindow::closeSprite()
+{
+    this->close();
 }
 
 void MainWindow::openHelpMenu()

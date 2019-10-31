@@ -17,9 +17,18 @@ public:
     ~DrawFrame();
     Ui::DrawFrame *ui;
     void setupFrame();
+    void setSize(int);
+    void setPencilSize(int);
+   // void setTool(int);
+    void setcolor(QColor);
+    void zoom(bool);
+    void gridToggle();
 
 private:
     DrawScene* drawScene;
+
+public slots:
+    void setTool(int);
 };
 
 #endif // DRAWFRAME_H

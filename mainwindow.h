@@ -23,27 +23,22 @@ public:
 
     HelpPopup *help;
 
-    QColor currColor;
-    int currDimension;
-    int currTool;
-    int pencilSize;
-    bool showGrid;
-    bool showZoom;
-
-
 public slots:
     void setColor(QColor);
     void setSize(int);
     void setTool(int);
     void setPencilSize(int);
     void toggleGrid();
-    void toggleZoom();
+    void toggleZoomIn();
+    void toggleZoomOut();
     void newSprite();
     void openSprite();
     void saveSprite();
     void saveAsSprite();
     void exportSprite();
+    void closeSprite();
     void openHelpMenu();
+
 
 signals:
     void colorSelected();

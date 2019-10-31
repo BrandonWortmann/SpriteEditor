@@ -15,3 +15,4 @@ HelpPopup::~HelpPopup()
 
 //TO DO - WRITE HELPFUL DESCRIPTIONS
 //TO DO - ADD IMAGES TO TOOLBAR BTN
+//TO DO - add button for zoom in and zoom out
