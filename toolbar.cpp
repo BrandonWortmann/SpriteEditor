@@ -7,6 +7,8 @@
 #include <QComboBox>
 #include "sizepopup.h"
 #include <QPalette>
+#include <QIcon>
+
 ToolBar::ToolBar(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ToolBar)
@@ -28,6 +30,7 @@ ToolBar::ToolBar(QWidget *parent) :
     defaultColor.setRgb(0,0,0, 255);
     setBtnColor(defaultColor);
     //ui->colorBtn->setStyleSheet(QString("QPushButton {background-color: rgba(0,0,0,255);}"));
+    ui->pencilBtn->setIcon(QIcon(":/icons/"));
 
 }
 
