@@ -15,6 +15,10 @@ public:
     explicit AnimationPreview(QWidget *parent = nullptr);
     ~AnimationPreview();
     Ui::AnimationPreview *ui;
+    void setFrames(std::vector<QImage*>*);
+
+private:
+    std::vector<QImage*>* frames;
 };
 
 #endif // ANIMATIONPREVIEW_H

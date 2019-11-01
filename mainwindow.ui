@@ -59,10 +59,10 @@
    <widget class="QWidget" name="fmWidge" native="true">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>260</y>
-      <width>191</width>
-      <height>491</height>
+      <x>140</x>
+      <y>560</y>
+      <width>651</width>
+      <height>171</height>
      </rect>
     </property>
    </widget>

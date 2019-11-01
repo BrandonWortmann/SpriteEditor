@@ -35,8 +35,24 @@ MainWindow::MainWindow(QWidget *parent)
     drawFrame->ui->setupUi(ui->dfWidge);
     drawFrame->setupFrame();
 
+
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
+
+    // showing images for frames in qt
+    frameManager->ui->currLabel->setText("Thotto begonno");
+
+
+    QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
+    QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
+    QImage* image3 = new QImage("../SpriteEditor/icons/papafranku.png");
+    frameManager->ui->prevLabel->setPixmap(QPixmap::fromImage(*image1));
+    frameManager->ui->prevLabel->setScaledContents(true);
+    frameManager->ui->currLabel->setPixmap(QPixmap::fromImage(*image2));
+    frameManager->ui->currLabel->setScaledContents(true);
+    frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
+    frameManager->ui->nextLabel->setScaledContents(true);
+
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
