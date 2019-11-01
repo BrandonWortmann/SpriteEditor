@@ -53,11 +53,31 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
     frameManager->ui->nextLabel->setScaledContents(true);
 
-    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
-    QIcon icon;
-    icon.addPixmap(pix);
-    toolBar->ui->pencilBtn->setIcon(icon);
+    QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
+    QIcon pencilIcon;
+    pencilIcon.addPixmap(pencilPix);
+    toolBar->ui->pencilBtn->setIcon(pencilIcon);
     toolBar->ui->pencilBtn->setIconSize(QSize(30,30));
+    QPixmap handPix("../a8-sprite-editor-f19-Nordicade/icons/hand.svg");
+    QIcon handIcon;
+    handIcon.addPixmap(handPix);
+    toolBar->ui->handBtn->setIcon(handIcon);
+    toolBar->ui->handBtn->setIconSize(QSize(30,30));
+    QPixmap eraserPix("../a8-sprite-editor-f19-Nordicade/icons/eraser.svg");
+    QIcon eraserIcon;
+    eraserIcon.addPixmap(eraserPix);
+    toolBar->ui->eraserBtn->setIcon(eraserIcon);
+    toolBar->ui->eraserBtn->setIconSize(QSize(30,30));
+    QPixmap bucketPix("../a8-sprite-editor-f19-Nordicade/icons/bucket.svg");
+    QIcon bucketIcon;
+    bucketIcon.addPixmap(bucketPix);
+    toolBar->ui->bucketBtn->setIcon(bucketIcon);
+    toolBar->ui->bucketBtn->setIconSize(QSize(30,30));
+    QPixmap gridPix("../a8-sprite-editor-f19-Nordicade/icons/grid.svg");
+    QIcon gridIcon;
+    gridIcon.addPixmap(gridPix);
+    toolBar->ui->gridBtn->setIcon(gridIcon);
+    toolBar->ui->gridBtn->setIconSize(QSize(30,30));
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);

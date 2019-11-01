@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Bucket</string>
+    <string/>
    </property>
    <property name="checkable">
     <bool>true</bool>
@@ -39,7 +39,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Grid</string>
+    <string/>
    </property>
    <property name="checkable">
     <bool>true</bool>
@@ -55,7 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Eraser</string>
+    <string/>
    </property>
    <property name="checkable">
     <bool>true</bool>
@@ -71,7 +71,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Hand</string>
+    <string/>
    </property>
    <property name="checkable">
     <bool>true</bool>
