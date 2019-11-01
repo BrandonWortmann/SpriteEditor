@@ -23,13 +23,20 @@ public:
     void reloadFrame();
 
 signals:
-    void changeCurrFrame(QImage*);
+    void changeCurrFrames(QImage*, QImage*, QImage*);
     void changeFrameStructure(std::vector<QImage*>);
 
+public slots:
+    void addFrame();
+    void deleteFrame();
+    void moveLeft();
+    void moveRight();
 
 private:
     std::vector<QImage*> frames;
-    int currFrame;
+    size_t currFrame;
+
+    void sendCurrFrames();
 
 };
 
