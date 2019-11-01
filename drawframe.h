@@ -19,7 +19,6 @@ public:
     void setupFrame();
     void setSize(int);
     void setPencilSize(int);
-   // void setTool(int);
     void setcolor(QColor);
     void zoom(bool);
     void gridToggle();
