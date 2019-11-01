@@ -26,15 +26,6 @@ ToolBar::ToolBar(QWidget *parent) :
         setSize(size);
         closeSize();
     });
-/*
-    defaultColor.setRgb(0,0,0, 255);
-    setBtnColor(defaultColor);
-    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/goofy.png");
-    QIcon icon;
-    icon.addPixmap(pix, QIcon::Normal, QIcon::Off);
-    ui->pencilBtn->setIcon(icon);
-    ui->pencilBtn->setIconSize(QSize(60,60));
-    */
 }
 
 ToolBar::~ToolBar()
@@ -47,7 +38,7 @@ ToolBar::~ToolBar()
 
 void ToolBar::colorSelected(){
     QColorDialog colorWheel;
-    QColor selectedColor = colorWheel.getColor(defaultColor, nullptr, "Select Color",QColorDialog::ShowAlphaChannel);
+    QColor selectedColor = colorWheel.getColor(defaultColor, this, "Select Color",QColorDialog::ShowAlphaChannel);
     setColor(selectedColor);
     defaultColor = selectedColor;
     setBtnColor(selectedColor);

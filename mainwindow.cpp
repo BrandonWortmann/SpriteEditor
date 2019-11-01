@@ -14,8 +14,11 @@
 #include <QFileDialog>
 #include "ui_sizepopup.h"
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QJsonArray>
 #include <QPalette>
+#include <QByteArray>
+#include <QBuffer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -198,9 +201,10 @@ void MainWindow::openSprite()
 {
     std::cout<<"open"<<std::endl;
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
-    std::string convert = filename.toStdString();
-    QFile file(filename);
+    QString fname = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
+    fileName = fname;
+    std::string convert = fname.toStdString();
+    QFile file(fname);
     QString allText;
     if(file.exists())
     {
@@ -210,30 +214,84 @@ void MainWindow::openSprite()
 
         QJsonDocument jsonDoc = QJsonDocument::fromJson(allText.toUtf8());
 
-        if(jsonDoc.isNull()){
-            std::cout<<"jsonDoc is null"<<std::endl;
-        }
-
-        QJsonArray jsonArr = jsonDoc.array();
-
-        for(int i = 0; i < jsonArr.size(); i++)
+        if(jsonDoc.isNull() || !jsonDoc.isObject())
         {
-         QJsonValue val = jsonArr.at(i);
+            //TODO - Popup for file error (wrong format)
+            std::cout<<"ERROR - null"<<std::endl;
         }
-    }
-    else{
-        std::cout<<"File does not exist." << std::endl;
+        QJsonObject jsonObj = jsonDoc.object();
+        if(jsonObj.isEmpty())
+        {
+            //TODO - Popup for file error (file empty)
+            std::cout<<"ERROR - empty file"<<std::endl;
+        }
+
+        int size = jsonObj["height"].toInt();
+        int numberOfFrames = jsonObj["numberOfFrames"].toInt();
+        QJsonObject frames = jsonObj["frames"].toObject();
+
+        QVector<QImage*> listOfFrames;
+
+        for(int i = 0; i < numberOfFrames; i++)
+        {
+            QString frameNumber = "frame" + QString::number(i);
+            QByteArray byteArr = frames[frameNumber].toString().toUtf8();
+            QImage pixImage;
+            pixImage.loadFromData(QByteArray::fromBase64(byteArr));
+            listOfFrames.append(&pixImage);
+        }
+        //TODO - Drawscene/Drawframe method to send frame data
     }
 }
 
 void MainWindow::saveSprite()
 {
+    //temp variables
     std::cout<<"save"<<std::endl;
+    int s = 4;
+    QVector<QImage*> sample;
+
+    QImage q;
+    sample.append(&q);
+    //temp variables (set size = real size)
+
+    if(fileName.isNull() || fileName == "")
+    {
+        saveAsSprite();
+    }
+    int size = s;
+    QJsonObject sprite;
+    QJsonObject frames;
+
+    for(int i = 0; i < sample.length(); i++)
+    {
+        QString frameNumber = "frame" + QString::number(i);
+        QJsonArray jsonArr;
+        frames[frameNumber] = jsonArr;
+    }
+    sprite["frames"] = frames;
+    sprite["numberOfFrames"] = sample.length();
+    sprite["width"] = size;
+    sprite["height"] = size;
+
+
+    QJsonDocument savedDoc(sprite);
+    savedDoc.toJson(QJsonDocument::Indented);
+    QFile saveFile(fileName);
+    saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
+    saveFile.write(savedDoc.toJson(QJsonDocument::Indented));
+
 }
 
 void MainWindow::saveAsSprite()
 {
     std::cout<<"saveAs"<<std::endl;
+
+    QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
+    fileName = fname;
+
+    saveSprite();
+
 }
 
 void MainWindow::exportSprite()
