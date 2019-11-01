@@ -15,6 +15,7 @@
 #include "ui_sizepopup.h"
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,10 @@ MainWindow::MainWindow(QWidget *parent)
     drawFrame->ui->setupUi(ui->dfWidge);
     drawFrame->setupFrame();
 
+
+    QColor black(0,0,0,255);
+    toolBar->setBtnColor(black);
+
     // showing images for frames in qt
     frameManager->ui->currLabel->setText("Thotto begonno");
 
@@ -47,6 +52,12 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->currLabel->setScaledContents(true);
     frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
     frameManager->ui->nextLabel->setScaledContents(true);
+
+    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
+    QIcon icon;
+    icon.addPixmap(pix);
+    toolBar->ui->pencilBtn->setIcon(icon);
+    toolBar->ui->pencilBtn->setIconSize(QSize(30,30));
 
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
@@ -99,6 +110,11 @@ void MainWindow::setSize(int dimension)
 
 void MainWindow::setTool(int tool)
 {
+    toolBar->ui->pencilBtn->setChecked(false);
+    toolBar->ui->handBtn->setChecked(false);
+    toolBar->ui->eraserBtn->setChecked(false);
+    toolBar->ui->bucketBtn->setChecked(false);
+
     drawFrame->setTool(tool);
 }
 

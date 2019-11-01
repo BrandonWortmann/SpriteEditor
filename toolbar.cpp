@@ -7,6 +7,8 @@
 #include <QComboBox>
 #include "sizepopup.h"
 #include <QPalette>
+#include <QIcon>
+
 ToolBar::ToolBar(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ToolBar)
@@ -25,7 +27,14 @@ ToolBar::ToolBar(QWidget *parent) :
         closeSize();
     });
 
-    defaultColor.setRgb(255,255,255,0);
+    defaultColor.setRgb(0,0,0, 255);
+    setBtnColor(defaultColor);
+    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/goofy.png");
+    QIcon icon;
+    //icon.addPixmap(pix);
+    icon.addPixmap(pix, QIcon::Normal, QIcon::Off);
+    ui->pencilBtn->setIcon(icon);
+    ui->pencilBtn->setIconSize(QSize(60,60));
 }
 
 ToolBar::~ToolBar()
@@ -37,16 +46,12 @@ ToolBar::~ToolBar()
 
 
 void ToolBar::colorSelected(){
-    QColorDialog colorWheel(defaultColor, nullptr);
-    QColor selectedColor = colorWheel.getColor();
+    QColorDialog colorWheel;
+    QColor selectedColor = colorWheel.getColor(defaultColor, nullptr, "Select Color",QColorDialog::ShowAlphaChannel);
     setColor(selectedColor);
     defaultColor = selectedColor;
+    setBtnColor(selectedColor);
 
-    QPalette pal = ui->colorBtn->palette();
-    pal.setColor(QPalette::Button, QColor(selectedColor));
-    ui->colorBtn->setAutoFillBackground(true);
-    ui->colorBtn->setPalette(pal);
-    ui->colorBtn->update();
 }
 
 void ToolBar::openSize()
@@ -101,5 +106,14 @@ void ToolBar::zoomOutSelected()
 void ToolBar::pencilSizeChanged(int size)
 {
     setPencilSize(size);
+}
+
+void ToolBar::setBtnColor(QColor selectedColor)
+{
+    QPalette pal = ui->colorBtn->palette();
+    pal.setColor(QPalette::Button, QColor(selectedColor));
+    ui->colorBtn->setAutoFillBackground(true);
+    ui->colorBtn->setPalette(pal);
+    ui->colorBtn->update();
 }
 
