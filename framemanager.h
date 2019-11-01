@@ -24,7 +24,7 @@ public:
 
 signals:
     void changeCurrFrames(QImage*, QImage*, QImage*);
-    void changeFrameStructure(std::vector<QImage*>);
+    void changeFrameStructure(std::vector<QImage*>*);
 
 public slots:
     void addFrame();

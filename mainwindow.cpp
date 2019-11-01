@@ -59,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->ui->pencilBtn->setIcon(icon);
     toolBar->ui->pencilBtn->setIconSize(QSize(30,30));
 
-
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
@@ -76,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar, &ToolBar::toggleZoomIn, this, &MainWindow::toggleZoomIn);
     connect(toolBar, &ToolBar::toggleZoomOut, this, &MainWindow::toggleZoomOut);
     connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
+    connect(frameManager, &FrameManager::changeCurrFrames, this, &MainWindow::changeCurrFrames);
+    connect(frameManager, &FrameManager::changeFrameStructure, this, &MainWindow::changeFrameStructure);
     connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openSprite);
@@ -97,6 +98,8 @@ MainWindow::~MainWindow()
     delete drawFrame;
     delete help;
 }
+
+// DrawFrame slots
 
 void MainWindow::setColor(QColor color)
 {
@@ -138,6 +141,32 @@ void MainWindow::toggleZoomOut()
 void MainWindow::setPencilSize(int size)
 {
     drawFrame->setPencilSize(size);
+}
+
+// FrameManager slots
+
+void MainWindow::changeCurrFrames(QImage* leftImage, QImage* midImage, QImage* rightImage) {
+    if(leftImage) {
+        frameManager->ui->prevLabel->setPixmap(QPixmap::fromImage(*leftImage));
+        frameManager->ui->prevLabel->show();
+    }
+    else {
+        frameManager->ui->prevLabel->hide();
+    }
+
+    if(rightImage) {
+        frameManager->ui->nextLabel->show();
+        frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*rightImage));
+    }
+    else {
+        frameManager->ui->currLabel->hide();
+    }
+
+    frameManager->ui->currLabel->setPixmap(QPixmap::fromImage(*midImage));
+}
+
+void MainWindow::changeFrameStructure(std::vector<QImage*>* frames) {
+
 }
 
 void MainWindow::newSprite()

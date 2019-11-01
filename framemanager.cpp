@@ -1,7 +1,10 @@
 #include "framemanager.h"
 #include "ui_framemanager.h"
 #include <QPixmap>
+#include <QPushButton>
+#include <stdio.h>
 
+using namespace std;
 FrameManager::FrameManager(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrameManager)
@@ -13,6 +16,14 @@ FrameManager::FrameManager(QWidget *parent) :
 
     changeCurrFrames(nullptr, startingImage, nullptr);
 
+    connect(ui->newFrameButton, &QPushButton::pressed,
+            this, &FrameManager::addFrame);
+    connect(ui->deleteFrameButton, &QPushButton::pressed,
+            this, &FrameManager::deleteFrame);
+    connect(ui->leftButton, &QPushButton::pressed,
+            this, &FrameManager::moveLeft);
+    connect(ui->rightButton, &QPushButton::pressed,
+            this, &FrameManager::moveRight);
 }
 
 FrameManager::~FrameManager()
@@ -29,7 +40,7 @@ void FrameManager::addFrame() {
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
     sendCurrFrames();
-    emit changeFrameStructure(frames);
+    emit changeFrameStructure(&frames);
     // TODO : move view to end
 }
 
@@ -43,9 +54,8 @@ void FrameManager::deleteFrame() {
         currFrame--;
     }
 
-    // move view
     sendCurrFrames();
-    emit changeFrameStructure(frames);
+    emit changeFrameStructure(&frames);
 }
 
 void FrameManager::moveLeft() {

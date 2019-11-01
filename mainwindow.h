@@ -24,6 +24,7 @@ public:
     HelpPopup *help;
 
 public slots:
+    // drawFrame
     void setColor(QColor);
     void setSize(int);
     void setTool(int);
@@ -31,6 +32,12 @@ public slots:
     void toggleGrid();
     void toggleZoomIn();
     void toggleZoomOut();
+
+    // frameManager
+    void changeCurrFrames(QImage*, QImage*, QImage*);
+    void changeFrameStructure(std::vector<QImage*>*);
+
+    // mainWindow
     void newSprite();
     void openSprite();
     void saveSprite();
@@ -41,8 +48,12 @@ public slots:
 
 
 signals:
+    // drawFrame
     void colorSelected();
     void sizeSelected();
+
+    // new drawFrame (I think this would be a drawFrame method, not sure though)
+    void newFrameSelected(QImage*);
 
 private:
     Ui::MainWindow *ui;
