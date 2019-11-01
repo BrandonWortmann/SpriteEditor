@@ -14,7 +14,7 @@ class DrawFrame : public QWidget
 
 public:
     DrawFrame(QWidget *parent = nullptr);
-    ~DrawFrame();
+    ~DrawFrame() override;
     Ui::DrawFrame *ui;
     void setupFrame();
     void setSize(int);
@@ -23,12 +23,11 @@ public:
     void setcolor(QColor);
     void zoom(bool);
     void gridToggle();
+    void setFrame(QImage* frame);
+    void setTool(int);
 
 private:
     DrawScene* drawScene;
-
-public slots:
-    void setTool(int);
 };
 
 #endif // DRAWFRAME_H

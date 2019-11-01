@@ -22,7 +22,8 @@ DrawFrame::~DrawFrame()
 
 void DrawFrame::setSize(int size)
 {
- //TODO: Set size
+    //drawScene->setSize(size);
+    //drawScene->update();
 }
 void DrawFrame::setcolor(QColor color)
 {
@@ -40,8 +41,19 @@ void DrawFrame::gridToggle()
 void DrawFrame::setTool(int tool)
 {
     drawScene->setTool(tool);
+    setCursor((Qt::CursorShape::IBeamCursor));
+    if(tool == 1)
+    {
+        setCursor(Qt::CursorShape::OpenHandCursor);
+    }
 }
 void DrawFrame::zoom(bool zoom)
 {
     drawScene->zoomScene(zoom);
+    drawScene->update();
+}
+
+void DrawFrame::setFrame(QImage* frame)
+{
+
 }

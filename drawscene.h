@@ -21,17 +21,19 @@ public:
 private:
     // data members
     QImage* frame;
-    int size, zoom, tlx, tly;
+    int size, zoom, tlx, tly, pencilSize;
     bool grid;
     QColor color, prevColor;
     bool mousePressed;
     QPoint prevPoint;
+    QPoint prevCursor;
     enum Tool{pencil, hand, eraser, bucket, undefined};
     Tool tool;
     //methods
-    void addPoint(QPoint point);
+    void addPoint(QPoint point, bool restore);
     void fill(QPoint point);
     void fillHelper(QPoint point, QColor currColor);
+    void timedRemove();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

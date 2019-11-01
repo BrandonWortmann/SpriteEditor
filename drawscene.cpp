@@ -1,18 +1,22 @@
 #include "drawscene.h"
 #include <cmath>
+#include <QTimer>
 
 DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
 {
-    size = 32;
-    zoom = size;
-    frame = new QImage(QSize(size, size), QImage::Format_ARGB32);
+    prevPoint.setX(0);
+    prevPoint.setY(0);
+    pencilSize = 0;
+    size = 64; //placeholder
+    zoom = size; //placeholder
+    frame = new QImage(QSize(size, size), QImage::Format_ARGB32); //placeholder
     color = Qt::black;
     mousePressed = false;
     setSceneRect(0, 0, 514, 514);
     grid = false;
-    tlx = tly = 0;
+    tlx = tly = 0; //placeholder
     tool = pencil;
-    update();
+    update(); //placeholder
 }
 
 void DrawScene::update()
@@ -25,7 +29,7 @@ void DrawScene::update()
             for (int j = 0; j < size; j++)
             {
                 addRect(((i * 512) / zoom) + 1, ((j * 512) / zoom) + 1,
-                        (512 / zoom) - 1, (512 / zoom) - 1, QPen(isGray ? Qt::lightGray : Qt::white),
+                        512 / zoom, 512 / zoom, QPen(QColor(0,0,0,0)),
                         QBrush(isGray ? Qt::lightGray : Qt::white, Qt::BrushStyle::SolidPattern));
                 isGray = !isGray;
             }
@@ -39,20 +43,20 @@ void DrawScene::update()
     }
     else
     {
-        addRect(0, 0, 515, 515, QPen(Qt::white), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
+        addRect(0, 0, 515, 515, QPen(QColor(0,0,0,0)), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
     }
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < zoom; i++)
     {
-        for (int j = 0; j < size; j++)
+        for (int j = 0; j < zoom; j++)
         {
-            int pixSize = (512 / zoom) - 1;
+            int pixSize = 512 / zoom;
             if (grid)
             {
                 pixSize -= 1;
             }
             addRect(((i * 512) / zoom) + 1, ((j * 512) / zoom) + 1,
-                    pixSize, pixSize, QPen(frame->pixelColor(i, j)),
-                    QBrush(frame->pixelColor(i, j), Qt::BrushStyle::SolidPattern));
+                    pixSize, pixSize, QPen(QColor(0,0,0,0)),
+                    QBrush(frame->pixelColor(i + tlx, j + tly), Qt::BrushStyle::SolidPattern));
         }
     }
 }
@@ -60,16 +64,16 @@ void DrawScene::update()
 
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    mousePressed = true;
     QPoint point = event->scenePos().toPoint();
     if(tool == pencil || tool == eraser)
     {
-        addPoint(point);
+        addPoint(point, false);
     }
     else if(tool == bucket)
     {
         fill(point);
     }
-    mousePressed = true;
     prevPoint = point;
 }
 
@@ -80,7 +84,7 @@ void DrawScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (mousePressed && (tool == pencil || tool == eraser))
+    if(mousePressed && (tool == pencil || tool == eraser))
     {
         QPoint point = event->scenePos().toPoint();
         double xDiff = point.x() - prevPoint.x();
@@ -93,41 +97,213 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
             draw.rx() += xDiff;
             draw.ry() += yDiff;
-            addPoint(draw.toPoint());
+            addPoint(draw.toPoint(), false);
         }
+        prevPoint = point;
+    }
+    else if(!mousePressed && (tool == pencil || tool == eraser))
+    {
+        QPoint point = event->scenePos().toPoint();
+        addPoint(prevPoint, true);
+        addPoint(point, false);
+        prevPoint = point;
+        prevCursor = QCursor::pos();
+        QTimer::singleShot(100, this, &DrawScene::timedRemove);
+    }
+    else if(mousePressed && tool == hand)
+    {
+        QPoint point = event->scenePos().toPoint();
+        tlx -= ((point.x() - prevPoint.x()) * zoom) / 512;
+        tly -= ((point.y() - prevPoint.y()) * zoom) / 512;
+        if(tlx < 0)
+        {
+            tlx = 0;
+        }
+        if(tly < 0)
+        {
+            tly = 0;
+        }
+        if(tlx + zoom > size)
+        {
+            tlx = size - zoom;
+        }
+        if(tly + zoom > size)
+        {
+            tly = size - zoom;
+        }
+        update();
         prevPoint = point;
     }
 }
 
-void DrawScene::addPoint(QPoint point)
+void DrawScene::timedRemove()
 {
-    if (point.x() >= 0 && point.x() < 512 && point.y() >= 0 && point.y() < 512)
+    if (prevCursor != QCursor::pos())
     {
+        addPoint(prevPoint, true);
+    }
+}
+
+void DrawScene::addPoint(QPoint point, bool restore)
+{
+    if (point.x() >= 0 && point.x() < 512 && point.y() >= 0 && point.y() < 512 && (tool == pencil || tool == eraser))
+    {
+        QPoint tlp(point.x(), point.y());
+        int maxI, maxJ;
         int x = (point.x() * zoom) / 512;
         int y = (point.y() * zoom) / 512;
-        int pixSize = (512 / zoom) - 1;
+        int pixSize = 512 / zoom;
         if (grid)
         {
             pixSize -= 1;
         }
-        if(tool == pencil)
+        switch(pencilSize)
         {
-            frame->setPixelColor(x + tlx, y + tly, color);
-            addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
-                pixSize, pixSize, QPen(color), QBrush(color, Qt::BrushStyle::SolidPattern));
-        }
-        else if(tool == eraser)
-        {
-            frame->setPixelColor(x + tlx, y + tly, QColor(0,0,0,0));
-            if(grid && (x + y) % 2 == 1)
+        case 0:
+            maxI = maxJ = 1;
+            break;
+        case 1:
+            if((point.x() % (512 / zoom)) < (256 / zoom))
             {
-                addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
-                    pixSize, pixSize, QPen(Qt::lightGray), QBrush(Qt::lightGray, Qt::BrushStyle::SolidPattern));
+                x--;
             }
-            else
+            if((point.y() % (512 / zoom)) < (256 / zoom))
             {
-                addRect(point.x() - (point.x() % (512 / zoom)) + 1, point.y() - (point.y() % (512 / zoom)) + 1,
-                    pixSize, pixSize, QPen(Qt::white), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
+                y--;
+            }
+            maxI = maxJ = 2;
+            if(x < 0)
+            {
+                x++;
+                maxI = 1;
+            }
+            if(y < 0)
+            {
+                y++;
+                maxJ = 1;
+            }
+            if(x >= zoom - 1)
+            {
+                maxI = 1;
+            }
+            if(y >= zoom - 1)
+            {
+                maxJ = 1;
+            }
+            break;
+        case 2:
+            x--;
+            y--;
+            maxI = maxJ = 3;
+            if(x < 0)
+            {
+                x++;
+                maxI = 2;
+            }
+            if(y < 0)
+            {
+                y++;
+                maxJ = 2;
+            }
+            if(x >= zoom - 2)
+            {
+                maxI = 2;
+            }
+            if(y >= zoom - 2)
+            {
+                maxJ = 2;
+            }
+            break;
+        case 3:
+            x -= (point.x() % (512 / zoom)) < (256 / zoom) ? 2 : 1;
+            y -= (point.y() % (512 / zoom)) < (256 / zoom) ? 2 : 1;
+            maxI = maxJ = 4;
+            if(x < 0)
+            {
+                x++;
+                maxI = 3;
+                if(x < 0)
+                {
+                    x++;
+                    maxI = 2;
+                }
+            }
+            if(y < 0)
+            {
+                y++;
+                maxJ = 3;
+                if(y < 0)
+                {
+                    y++;
+                    maxJ = 2;
+                }
+            }
+            if(x >= zoom - 3)
+            {
+                maxI = 3;
+                if(x >= zoom - 2)
+                {
+                    maxI = 2;
+                }
+            }
+            if(y >= zoom - 3)
+            {
+                maxJ = 3;
+                if(y >= zoom - 2)
+                {
+                    maxJ = 2;
+                }
+            }
+            break;
+        default:
+            return;
+        }
+        for(int i = 0; i < maxI; i++)
+        {
+            for(int j = 0; j < maxJ; j++)
+            {
+                if(grid && ((x + i) + (y + j)) % 2 == 1)
+                {
+                    addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
+                        QPen(QColor(0,0,0,0)), QBrush(Qt::lightGray, Qt::BrushStyle::SolidPattern));
+                }
+                else
+                {
+                    addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
+                        QPen(QColor(0,0,0,0)), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
+                }
+                if(tool == pencil)
+                {
+                    if(!restore)
+                    {
+                        if(mousePressed)
+                        {
+                            frame->setPixelColor(x + i + tlx, y + j + tly, color);
+                        }
+                        addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
+                            QPen(QColor(0,0,0,0)), QBrush(color, Qt::BrushStyle::SolidPattern));
+                    }
+                    else
+                    {
+                        addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
+                            QPen(QColor(0,0,0,0)), QBrush(frame->pixelColor(x + i + tlx, y + j + tly), Qt::BrushStyle::SolidPattern));
+                    }
+                }
+                else if(tool == eraser)
+                {
+                    if(!restore)
+                    {
+                        if(mousePressed)
+                        {
+                            frame->setPixelColor(x + i + tlx, y + j + tly, QColor(0,0,0,0));
+                        }
+                    }
+                    else
+                    {
+                        addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
+                            QPen(QColor(0,0,0,0)), QBrush(frame->pixelColor(x + i + tlx, y + j + tly), Qt::BrushStyle::SolidPattern));
+                    }
+                }
             }
         }
     }
@@ -206,17 +382,46 @@ void DrawScene::gridToggle()
     grid = !grid;
 }
 
-void DrawScene::setSize(int size)
+void DrawScene::setSize(int sizeInput)
 {
-    //TODO; Set size
+    size = sizeInput;
+    zoom = size;
+    tlx = tly = 0;
 }
 
 void DrawScene::setPencilSize(int size)
 {
-
+    pencilSize = size;
 }
 
-void DrawScene::zoomScene(bool in)
+void DrawScene::zoomScene(bool zoomIn)
 {
-
+    if(zoomIn && zoom > 4)
+    {
+        zoom >>= 1;
+        tlx += zoom >> 1;
+        tly += zoom >> 1;
+    }
+    else if(!zoomIn && zoom < size)
+    {
+        tlx -= zoom >> 1;
+        tly -= zoom >> 1;
+        zoom <<= 1;
+        if(tlx < 0)
+        {
+            tlx = 0;
+        }
+        if(tly < 0)
+        {
+            tly = 0;
+        }
+        if(tlx + zoom > size)
+        {
+            tlx = size - zoom;
+        }
+        if(tly + zoom > size)
+        {
+            tly = size - zoom;
+        }
+    }
 }

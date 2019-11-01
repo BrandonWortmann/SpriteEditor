@@ -45,6 +45,12 @@
       <height>16777215</height>
      </size>
     </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
    </widget>
    <widget class="QWidget" name="apWidge" native="true">
     <property name="geometry">
