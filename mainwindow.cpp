@@ -53,6 +53,12 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
     frameManager->ui->nextLabel->setScaledContents(true);
 
+    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
+    QIcon icon;
+    icon.addPixmap(pix);
+    toolBar->ui->pencilBtn->setIcon(icon);
+    toolBar->ui->pencilBtn->setIconSize(QSize(30,30));
+
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);

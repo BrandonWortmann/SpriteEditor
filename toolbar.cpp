@@ -29,9 +29,12 @@ ToolBar::ToolBar(QWidget *parent) :
 
     defaultColor.setRgb(0,0,0, 255);
     setBtnColor(defaultColor);
-    //ui->colorBtn->setStyleSheet(QString("QPushButton {background-color: rgba(0,0,0,255);}"));
-    ui->pencilBtn->setIcon(QIcon(":/icons/"));
-
+    QPixmap pix("../a8-sprite-editor-f19-Nordicade/icons/goofy.png");
+    QIcon icon;
+    //icon.addPixmap(pix);
+    icon.addPixmap(pix, QIcon::Normal, QIcon::Off);
+    ui->pencilBtn->setIcon(icon);
+    ui->pencilBtn->setIconSize(QSize(60,60));
 }
 
 ToolBar::~ToolBar()

@@ -119,7 +119,13 @@
     <number>-1</number>
    </property>
    <property name="text">
-    <string>Pencil</string>
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>60</width>
+     <height>60</height>
+    </size>
    </property>
    <property name="checkable">
     <bool>true</bool>
