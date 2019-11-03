@@ -22,6 +22,7 @@ public:
     ~MainWindow();
 
     HelpPopup *help;
+    QString fileName;
 
 public slots:
     // drawFrame
