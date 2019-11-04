@@ -233,10 +233,6 @@ void MainWindow::openSprite()
             sprite.append(&img);
         }
     }
-    else{
-        errorMsg.setInformativeText("No file to open was selected that matches format.");
-        errorMsg.exec();
-    }
     //TODO - Drawscene/Drawframe method to send frame data
 
 }
