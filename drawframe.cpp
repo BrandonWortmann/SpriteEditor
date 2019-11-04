@@ -22,8 +22,7 @@ DrawFrame::~DrawFrame()
 
 void DrawFrame::setSize(int size)
 {
-    //drawScene->setSize(size);
-    //drawScene->update();
+
 }
 void DrawFrame::setcolor(QColor color)
 {
@@ -55,5 +54,6 @@ void DrawFrame::zoom(bool zoom)
 
 void DrawFrame::setFrame(QImage* frame)
 {
-
+    drawScene->setFrame(frame);
+    drawScene->update();
 }

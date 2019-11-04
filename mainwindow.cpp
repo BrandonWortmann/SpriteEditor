@@ -99,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
-
+    connect(drawFrame->drawScene, &DrawScene::setSaved, this, &MainWindow::setSaved);
 
 }
 
@@ -322,4 +322,9 @@ void MainWindow::closeSprite()
 void MainWindow::openHelpMenu()
 {
     help->show();
+}
+
+void MainWindow::setSaved(bool saved)
+{
+    isSaved = saved;
 }

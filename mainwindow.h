@@ -46,6 +46,7 @@ public slots:
     void exportSprite();
     void closeSprite();
     void openHelpMenu();
+    void setSaved(bool saved);
 
 
 signals:
@@ -62,6 +63,7 @@ private:
     FrameManager* frameManager;
     DrawFrame* drawFrame;
     AnimationPreview* animationPreview;
+    bool isSaved;
 
 };
 #endif // MAINWINDOW_H
