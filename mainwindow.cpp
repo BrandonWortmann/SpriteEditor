@@ -18,6 +18,8 @@
 #include <QPalette>
 #include <QJsonObject>
 #include <QByteArray>
+#include <QRgba64>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -141,13 +143,11 @@ void MainWindow::toggleGrid()
 void MainWindow::toggleZoomIn()
 {
     drawFrame->zoom(true);
-    std::cout<< "zoom in";
 }
 
 void MainWindow::toggleZoomOut()
 {
     drawFrame->zoom(false);
-    std::cout<< "zoom out";
 }
 
 void MainWindow::setPencilSize(int size)
@@ -172,13 +172,13 @@ void MainWindow::newSprite()
 
 void MainWindow::openSprite()
 {
-    std::cout<<"open"<<std::endl;
 
     QString fname = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
     fileName = fname;
     std::string convert = fname.toStdString();
     QFile file(fname);
     QString allText;
+    QMessageBox errorMsg;
 
     if(file.exists())
     {
@@ -191,33 +191,48 @@ void MainWindow::openSprite()
         if(jsonDoc.isNull() || !jsonDoc.isObject())
               {
                   //TODO - Popup for file error (wrong format)
-                  std::cout<<"ERROR - null"<<std::endl;
+                errorMsg.setInformativeText("File selected does not match format.");
+                errorMsg.exec();
+                return;
               }
               QJsonObject jsonObj = jsonDoc.object();
               if(jsonObj.isEmpty())
               {
                   //TODO - Popup for file error (file empty)
-                  std::cout<<"ERROR - empty file"<<std::endl;
+                  errorMsg.setInformativeText("file selected is empty.");
+                  errorMsg.exec();
+                  return;
               }
 
         int size = jsonObj["height"].toInt();
         int numberOfFrames = jsonObj["numberOfFrames"].toInt();
         QJsonObject frames = jsonObj["frames"].toObject();
+        
+        //temporary variable. replace later
+        QVector<QImage*> sprite;
 
-        QJsonArray jsonArr = jsonDoc.array();
-
-        QVector<QImage*> listOfFrames;
-
-        for(int i = 0; i < numberOfFrames; i++)
+        for(int frameNum = 0; frameNum < numberOfFrames; frameNum++)
          {
-            QString frameNumber = "frame" + QString::number(i);
-            QByteArray byteArr = frames[frameNumber].toString().toUtf8();
-            QImage pixImage;
-            pixImage.loadFromData(QByteArray::fromBase64(byteArr));
-            listOfFrames.append(&pixImage);         }
-    }
-    else{
-        std::cout<<"File does not exist." << std::endl;
+            QString frameNumber = "frame" + QString::number(frameNum);
+            QJsonArray overallArr = frames[frameNumber].toArray();
+            QImage img(QSize(size, size), QImage::Format_RGBA64);
+            for( int i = 0; i < size; i++)
+            {
+                QJsonArray rowArr = overallArr.at(i).toArray();
+                for( int j = 0; j < size; j++)
+                {
+                    QJsonArray rgbaValues = rowArr.at(j).toArray();
+                    int red = rgbaValues.at(0).toInt();
+                    int green = rgbaValues.at(1).toInt();
+                    int blue = rgbaValues.at(2).toInt();
+                    int alpha = rgbaValues.at(3).toInt();
+
+                    QColor color(red, green, blue, alpha);
+                    img.setPixelColor(i, j, color);
+                }
+            }
+            sprite.append(&img);
+        }
     }
     //TODO - Drawscene/Drawframe method to send frame data
 
@@ -225,7 +240,7 @@ void MainWindow::openSprite()
 
 void MainWindow::saveSprite()
 {
-    std::cout<<"save"<<std::endl;
+    //temp variables
     int s = 4;
     QVector<QImage*> sample;
 
@@ -237,15 +252,34 @@ void MainWindow::saveSprite()
     {
         saveAsSprite();
     }
+
     int size = s;
     QJsonObject sprite;
     QJsonObject frames;
 
-    for(int i = 0; i < sample.length(); i++)
+    for(int frameNum = 0; frameNum < sample.length(); frameNum++)
     {
-        QString frameNumber = "frame" + QString::number(i);
-        QJsonArray jsonArr;
-        frames[frameNumber] = jsonArr;
+        QJsonArray overallArray;
+        QString frameNumber = "frame" + QString::number(frameNum);
+        QJsonArray rowArr;
+        for(int i = 0; i < size; i++)
+        {
+            QJsonArray colArray;
+            for(int j = 0; j < size; j++)
+            {
+                QImage *img = sample.at(frameNum);
+                QRgb rgba = img->pixel(i,j);
+                QJsonArray rgbaValues;
+                rgbaValues.append(QJsonValue(qRed(rgba)));
+                rgbaValues.append(QJsonValue(qGreen(rgba)));
+                rgbaValues.append(QJsonValue(qBlue(rgba)));
+                rgbaValues.append(QJsonValue(qAlpha(rgba)));
+
+                colArray.append(rgbaValues);
+            }
+            overallArray.append(colArray);
+        }
+        frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
     sprite["numberOfFrames"] = sample.length();
@@ -267,14 +301,17 @@ void MainWindow::saveAsSprite()
     std::cout<<"saveAs"<<std::endl;
 
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
-    fileName = fname;
-
-    saveSprite();
+    if(!fileName.isNull() || fileName != "")
+    {
+        fileName = fname;
+        saveSprite();
+    }
 }
 
 void MainWindow::exportSprite()
 {
     std::cout<<"export"<<std::endl;
+
 }
 
 void MainWindow::closeSprite()
