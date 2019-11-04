@@ -35,7 +35,7 @@ public slots:
     void toggleZoomOut();
 
     // frameManager
-    void changeCurrFrames(QImage*, QImage*, QImage*);
+    void changeCurrFrame(QImage*);
     void changeFrameStructure(std::vector<QImage*>*);
 
     // mainWindow

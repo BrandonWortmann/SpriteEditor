@@ -10,11 +10,31 @@ FrameManager::FrameManager(QWidget *parent) :
     ui(new Ui::FrameManager)
 {
     ui->setupUi(this);
+}
 
+FrameManager::~FrameManager()
+{
+    delete ui;
+}
+
+void FrameManager::setupFrameManager()
+{
     QImage* startingImage = new QImage();
     frames.push_back(startingImage);
+    currFrame = 0;
+    ui->currLabelNum->setText("0");
 
-    changeCurrFrames(nullptr, startingImage, nullptr);
+    sendCurrFrame();
+
+    QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
+    QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
+    QImage* image3 = new QImage("../SpriteEditor/icons/papafranku.png");
+    ui->prevLabel->setPixmap(QPixmap::fromImage(*image1));
+    ui->prevLabel->setScaledContents(true);
+    ui->currLabel->setPixmap(QPixmap::fromImage(*image2));
+    ui->currLabel->setScaledContents(true);
+    ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
+    ui->nextLabel->setScaledContents(true);
 
     connect(ui->newFrameButton, &QPushButton::pressed,
             this, &FrameManager::addFrame);
@@ -26,68 +46,78 @@ FrameManager::FrameManager(QWidget *parent) :
             this, &FrameManager::moveRight);
 }
 
-FrameManager::~FrameManager()
-{
-    delete ui;
-}
-
 /*********
  * Slot
  * ******/
 
-void FrameManager::addFrame() {
+void FrameManager::addFrame()
+{
     QImage* newFrame = new QImage();
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
-    sendCurrFrames();
+    sendCurrFrame();
     emit changeFrameStructure(&frames);
     // TODO : move view to end
 }
 
-void FrameManager::deleteFrame() {
-    if(frames.size() == 1) {
+void FrameManager::deleteFrame()
+{
+    if(frames.size() == 1)
+    {
         return;
     }
 
-    frames.erase(frames.begin() + ((int) currFrame));
-    if(currFrame != 0) {
+    frames.erase(frames.begin() + (int (currFrame)));
+    if(currFrame != 0)
+    {
         currFrame--;
     }
 
-    sendCurrFrames();
+    sendCurrFrame();
     emit changeFrameStructure(&frames);
 }
 
-void FrameManager::moveLeft() {
-    if(currFrame == 0) {
+void FrameManager::moveLeft()
+{
+    if(currFrame == 0)
+    {
         return;
     }
 
     currFrame--;
-    sendCurrFrames();
+    sendCurrFrame();
 }
 
-void FrameManager::moveRight() {
+void FrameManager::moveRight()
+{
     if(currFrame == frames.size() - 1) {
         return;
     }
     currFrame++;
 
-    sendCurrFrames();
+    sendCurrFrame();
 }
 
-void FrameManager::sendCurrFrames() {
-
-    QImage* leftFrame = nullptr;
-    QImage* rightFrame = nullptr;
-
+void FrameManager::sendCurrFrame()
+{
     if(currFrame != 0) {
-        leftFrame = frames[currFrame - 1];
+        ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
+        ui->prevLabelNum->setText(QString::number(currFrame));
+    }
+    else {
+        ui->prevLabelNum->setText("");
     }
 
     if(currFrame < frames.size() - 1) {
-        rightFrame = frames[currFrame + 1];
+        ui->nextLabel->setPixmap(QPixmap::fromImage(*frames[currFrame + 1]));
+        ui->nextLabelNum->setText(QString::number(currFrame + 2));
+    }
+    else {
+        ui->nextLabelNum->setText("");
     }
 
-    emit changeCurrFrames(leftFrame, frames[currFrame], rightFrame);
+    ui->currLabel->setPixmap(QPixmap::fromImage(*frames[currFrame]));
+    ui->currLabelNum->setText(QString::number(currFrame + 1));
+
+    emit changeCurrFrame(frames[currFrame]);
 }
