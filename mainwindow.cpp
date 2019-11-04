@@ -44,18 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->setBtnColor(black);
 
     // showing images for frames in qt
-    frameManager->ui->currLabel->setText("Thotto begonno");
-
-
-    QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
-    QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
-    QImage* image3 = new QImage("../SpriteEditor/icons/papafranku.png");
-    frameManager->ui->prevLabel->setPixmap(QPixmap::fromImage(*image1));
-    frameManager->ui->prevLabel->setScaledContents(true);
-    frameManager->ui->currLabel->setPixmap(QPixmap::fromImage(*image2));
-    frameManager->ui->currLabel->setScaledContents(true);
-    frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
-    frameManager->ui->nextLabel->setScaledContents(true);
+    frameManager->setupFrameManager();
 
     QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
     QIcon pencilIcon;
@@ -99,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(toolBar, &ToolBar::toggleZoomIn, this, &MainWindow::toggleZoomIn);
     connect(toolBar, &ToolBar::toggleZoomOut, this, &MainWindow::toggleZoomOut);
     connect(toolBar->ui->pSizeSlider, &QSlider::valueChanged, toolBar, &ToolBar::pencilSizeChanged);
-    connect(frameManager, &FrameManager::changeCurrFrames, this, &MainWindow::changeCurrFrames);
+    connect(frameManager, &FrameManager::changeCurrFrame, this, &MainWindow::changeCurrFrame);
     connect(frameManager, &FrameManager::changeFrameStructure, this, &MainWindow::changeFrameStructure);
     connect(toolBar, &ToolBar::setPencilSize, this, &MainWindow::setPencilSize);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSprite);
@@ -167,24 +156,8 @@ void MainWindow::setPencilSize(int size)
 
 // FrameManager slots
 
-void MainWindow::changeCurrFrames(QImage* leftImage, QImage* midImage, QImage* rightImage) {
-    if(leftImage) {
-        frameManager->ui->prevLabel->setPixmap(QPixmap::fromImage(*leftImage));
-        frameManager->ui->prevLabel->show();
-    }
-    else {
-        frameManager->ui->prevLabel->hide();
-    }
-
-    if(rightImage) {
-        frameManager->ui->nextLabel->show();
-        frameManager->ui->nextLabel->setPixmap(QPixmap::fromImage(*rightImage));
-    }
-    else {
-        frameManager->ui->currLabel->hide();
-    }
-
-    frameManager->ui->currLabel->setPixmap(QPixmap::fromImage(*midImage));
+void MainWindow::changeCurrFrame(QImage* newFrame) {
+    drawFrame->setFrame(newFrame);
 }
 
 void MainWindow::changeFrameStructure(std::vector<QImage*>* frames) {

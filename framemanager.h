@@ -17,13 +17,14 @@ public:
     ~FrameManager();
     Ui::FrameManager *ui;
 
+    void setupFrameManager();
     std::vector<QImage*> getFrames();
     void setFrames(std::vector<QImage*>);
     void setSize(int);
     void reloadFrame();
 
 signals:
-    void changeCurrFrames(QImage*, QImage*, QImage*);
+    void changeCurrFrame(QImage*);
     void changeFrameStructure(std::vector<QImage*>*);
 
 public slots:
@@ -36,7 +37,7 @@ private:
     std::vector<QImage*> frames;
     size_t currFrame;
 
-    void sendCurrFrames();
+    void sendCurrFrame();
 
 };
 
