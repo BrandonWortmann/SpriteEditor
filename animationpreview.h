@@ -15,8 +15,12 @@ public:
     explicit AnimationPreview(QWidget *parent = nullptr);
     ~AnimationPreview();
     Ui::AnimationPreview *ui;
+    void setupAnimationPreview();
     void setFrames(std::vector<QImage*>*);
 
+
+public slots:
+    void sliderMoved(int);
 private:
     std::vector<QImage*>* frames;
 };

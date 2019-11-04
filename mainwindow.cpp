@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // showing images for frames in qt
     frameManager->setupFrameManager();
+    animationPreview->setupAnimationPreview();
 
     QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
     QIcon pencilIcon;
