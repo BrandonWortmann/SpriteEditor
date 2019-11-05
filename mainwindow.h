@@ -27,6 +27,8 @@ public:
     QVector<QImage*> imgVect;
     QList<QVector<uint8_t>> pixelList;
     uint size;
+    bool isSaved;
+
 
 public slots:
     // drawFrame
@@ -50,7 +52,7 @@ public slots:
     void exportSprite();
     void closeSprite();
     void openHelpMenu();
-    void setSaved(bool saved);
+    void setSaved(bool);
 
 
 signals:
@@ -61,13 +63,13 @@ signals:
     // new drawFrame (I think this would be a drawFrame method, not sure though)
     void newFrameSelected(QImage*);
 
+
 private:
     Ui::MainWindow *ui;
     ToolBar* toolBar;
     FrameManager* frameManager;
     DrawFrame* drawFrame;
     AnimationPreview* animationPreview;
-    bool isSaved;
 
 };
 #endif // MAINWINDOW_H
