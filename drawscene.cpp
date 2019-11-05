@@ -1,29 +1,38 @@
+/**
+ * This controls everything for the DrawFrame.
+ *
+ * Author: Wasted Potential
+ */
+
 #include "drawscene.h"
 #include <cmath>
 #include <QTimer>
 
+/**
+ * Sets default values and constructs the DrawScene.
+ */
 DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
 {
     prevPoint.setX(0);
     prevPoint.setY(0);
     pencilSize = 0;
-    size = 64; //placeholder
-    zoom = size; //placeholder
-    frame = new QImage(QSize(size, size), QImage::Format_ARGB32); //placeholder
     color = Qt::black;
     mousePressed = false;
     setSceneRect(0, 0, 514, 514);
     grid = false;
-    tlx = tly = 0; //placeholder
     tool = pencil;
-    update(); //placeholder
 }
 
+/**
+ * Updates the DrawScene based on the saved image and whether or not the grid is on.
+ */
 void DrawScene::update()
 {
+    // Set the grid if it is toggled on.
     if (grid)
     {
         bool isGray = false;
+        // Draw every square for the grid
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -35,16 +44,19 @@ void DrawScene::update()
             }
             isGray = !isGray;
         }
+        // Draw all of the lines for the grid
         for (int i = 0; i < zoom + 1; i++)
         {
             addLine((i * 512) / zoom, 0, (i * 512) / zoom, 514, QPen(Qt::black));
             addLine(0, (i * 512) / zoom, 514, (i * 512) / zoom, QPen(Qt::black));
         }
     }
+    // Sets everything to white when the grid is toggled off.
     else
     {
         addRect(0, 0, 515, 515, QPen(QColor(0,0,0,0)), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
     }
+    // Add everything from the current image.
     for (int i = 0; i < zoom; i++)
     {
         for (int j = 0; j < zoom; j++)
@@ -61,17 +73,21 @@ void DrawScene::update()
     }
 }
 
-
+/**
+ * Handles when the mouse is pressed.
+ */
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
     mousePressed = true;
     QPoint point = event->scenePos().toPoint();
+    // Handles pencil and eraser
     if(tool == pencil || tool == eraser)
     {
         setSaved(false);
         addPoint(point, false);
     }
+    // Handles bucket
     else if(tool == bucket)
     {
         setSaved(false);
@@ -80,15 +96,23 @@ void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     prevPoint = point;
 }
 
+/**
+ * Handles when the mouse is released.
+ */
 void DrawScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     mousePressed = false;
 }
 
+/**
+ * Handles when the mouse is moved.
+ */
 void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    // Handles pencil and eraser when the mouse is pressed
     if(mousePressed && (tool == pencil || tool == eraser))
     {
+        // Calculate the line between the previous point and the current point.
         QPoint point = event->scenePos().toPoint();
         double xDiff = point.x() - prevPoint.x();
         double yDiff = point.y() - prevPoint.y();
@@ -96,6 +120,7 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         xDiff /= scalar;
         yDiff /= scalar;
         QPointF draw(prevPoint.x(), prevPoint.y());
+        // Draw points along that line.
         for (int i = 0; i < scalar; i++)
         {
             draw.rx() += xDiff;
@@ -104,17 +129,22 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         prevPoint = point;
     }
+    // Handles pencil and eraser when the mouse is not pressed.
     else if(!mousePressed && (tool == pencil || tool == eraser))
     {
+        // Restore the previous point and add the current point.
         QPoint point = event->scenePos().toPoint();
         addPoint(prevPoint, true);
         addPoint(point, false);
         prevPoint = point;
         prevCursor = QCursor::pos();
+        // Remove the previous point in 100 ms.
         QTimer::singleShot(100, this, &DrawScene::timedRemove);
     }
+    // Handles hand when the mouse is pressed.
     else if(mousePressed && tool == hand)
     {
+        // Calculate the line between the current point and the previous point.
         QPoint point = event->scenePos().toPoint();
         tlx -= ((point.x() - prevPoint.x()) * zoom) / 512;
         tly -= ((point.y() - prevPoint.y()) * zoom) / 512;
