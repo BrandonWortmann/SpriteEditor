@@ -15,8 +15,8 @@ HelpPopup::HelpPopup(QWidget *parent) :
         " close the Sprite editor by pressing the close drop down menu.");
 
     ui->toolbarText->setText("The toolbar is the verticle bar on the left side of the editor, and consists of "
-        "the following tools: tool size slider \npencil \nhand \neraser \nbucket \ngrid \nsize \ncolor \nzoom in & zoom out."
-        "  In addition to choosing the pencil color, you can add your own custom colors by pressing the color toolbar option and"
+        "the following tools: tool size slider \nPencil \nHand \nEraser \nBucket \nGrid \nSize \nColor \nZoom in & Zoom out.\n"
+        " In addition to choosing the pencil color, you can add your own custom colors by pressing the color toolbar option and"
         " then pressing the \"+\" under the custom text.");
 
     ui->animationPreviewText->setText("The animation preview is the top right window box that displays the "
