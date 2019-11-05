@@ -1,3 +1,8 @@
+/*
+ * The header file for the DrawFrame class
+ * Author: Wasted Potential
+*/
+
 #ifndef DRAWFRAME_H
 #define DRAWFRAME_H
 

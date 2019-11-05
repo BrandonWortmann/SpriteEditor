@@ -1,3 +1,8 @@
+/*
+ * The header file for the draw scene class
+ * Author: Wasted Potential
+*/
+
 #ifndef DRAWSCENE_H
 #define DRAWSCENE_H
 

@@ -312,6 +312,9 @@ void DrawScene::addPoint(QPoint point, bool restore)
     }
 }
 
+/**
+ * fills in a region with a certain color
+ */
 void DrawScene::fill(QPoint point)
 {
     QPoint currPoint = QPoint(((point.x() * zoom) / 512) + tlx, ((point.y() * zoom) / 512) + tly);
@@ -324,6 +327,9 @@ void DrawScene::fill(QPoint point)
     update();
 }
 
+/**
+ * A recursive helper method to help the fill method
+ */
 void DrawScene::fillHelper(QPoint point, QColor currColor)
 {
     frame->setPixelColor(point, color);
@@ -349,11 +355,17 @@ void DrawScene::fillHelper(QPoint point, QColor currColor)
     }
 }
 
+/**
+ * Sets the current color
+ */
 void DrawScene::setColor(QColor c)
 {
     color = c;
 }
 
+/**
+ * sets the tool to the given tool
+ */
 void DrawScene::setTool(int toolNum)
 {
     switch(toolNum)
@@ -380,11 +392,17 @@ void DrawScene::setTool(int toolNum)
     }
 }
 
+/**
+ * toggles the grid on and off
+ */
 void DrawScene::gridToggle()
 {
     grid = !grid;
 }
 
+/**
+ * Sets the drawScene to the currently selected frame
+ */
 void DrawScene::setFrame(QImage* frame)
 {
     this->frame = frame;
@@ -392,11 +410,17 @@ void DrawScene::setFrame(QImage* frame)
     tlx = tly = 0;
 }
 
+/**
+ * sets the size of the pencil
+ */
 void DrawScene::setPencilSize(int size)
 {
     pencilSize = size;
 }
 
+/**
+ * Zooms in and out of the drawScene
+ */
 void DrawScene::zoomScene(bool zoomIn)
 {
     if(zoomIn && zoom > 4)
