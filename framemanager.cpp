@@ -59,6 +59,18 @@ void FrameManager::setFrames(QVector<QImage*> newFrames) {
     frames = newFrames;
 }
 
+void FrameManager::setSize(int value) {
+    for(int i = 0; i < frames.size(); i++) {
+        QImage newImage = frames[i]->scaled(value, value, Qt::KeepAspectRatio);
+        QImage* oldImage = frames[i];
+        frames[i] = &newImage;
+        delete oldImage;
+    }
+
+    emit changeCurrFrame(frames[currFrame]);
+    emit changeFrameStructure(frames);
+}
+
 /*********
  * Slot
  * ******/
