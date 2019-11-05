@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     drawFrame->setupFrame();
 
 
+
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
 
