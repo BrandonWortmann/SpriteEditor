@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "toolbar.h"
+#include "gif.h"
 #include "ui_mainwindow.h"
 #include "ui_animationpreview.h"
 #include "ui_drawframe.h"
@@ -37,8 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
-    drawFrame->setupFrame();
-
+    drawFrame->setupFrame();    
 
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
@@ -203,7 +203,8 @@ void MainWindow::openSprite()
                   return;
               }
 
-        int size = jsonObj["height"].toInt();
+        size = uint(jsonObj["height"].toInt());
+
         int numberOfFrames = jsonObj["numberOfFrames"].toInt();
         QJsonObject frames = jsonObj["frames"].toObject();
         
@@ -214,7 +215,8 @@ void MainWindow::openSprite()
          {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
-            QImage img(QSize(size, size), QImage::Format_RGBA64);
+            QImage img(QSize(size, size), QImage::Format_ARGB32);
+
             for( int i = 0; i < size; i++)
             {
                 QJsonArray rowArr = overallArr.at(i).toArray();
@@ -232,19 +234,22 @@ void MainWindow::openSprite()
             }
             sprite.append(&img);
         }
+        imgVect = sprite;
+        int x;
     }
     //TODO - Drawscene/Drawframe method to send frame data
+
 
 }
 
 void MainWindow::saveSprite()
 {
     //temp variables
-    int s = 4;
-    QVector<QImage*> sample;
+    int s = size;
+ //   QVector<QImage*> sample;
 
-    QImage q;
-    sample.append(&q);
+  //  QImage q;
+   // sample.append(&q);
     //temp variables (set size = real size)
 
     if(fileName.isNull() || fileName == "")
@@ -252,21 +257,23 @@ void MainWindow::saveSprite()
         saveAsSprite();
     }
 
-    int size = s;
+   // int size =// imgVect.at(0)->size().width();
     QJsonObject sprite;
     QJsonObject frames;
 
-    for(int frameNum = 0; frameNum < sample.length(); frameNum++)
+    for(int frameNum = 0; frameNum < imgVect.length(); frameNum++)
     {
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
         QJsonArray rowArr;
+        QVector<uint8_t> pixelVect;
+
         for(int i = 0; i < size; i++)
         {
             QJsonArray colArray;
             for(int j = 0; j < size; j++)
             {
-                QImage *img = sample.at(frameNum);
+                QImage *img = imgVect.at(frameNum);
                 QRgb rgba = img->pixel(i,j);
                 QJsonArray rgbaValues;
                 rgbaValues.append(QJsonValue(qRed(rgba)));
@@ -274,16 +281,31 @@ void MainWindow::saveSprite()
                 rgbaValues.append(QJsonValue(qBlue(rgba)));
                 rgbaValues.append(QJsonValue(qAlpha(rgba)));
 
+                pixelVect.append(qRed(rgba));
+                pixelVect.append(qGreen(rgba));
+                pixelVect.append(qBlue(rgba));
+                pixelVect.append(qAlpha(rgba));
+
                 colArray.append(rgbaValues);
             }
             overallArray.append(colArray);
         }
+
+        pixelList.append(pixelVect);
+        for(int i = 0; i < pixelList.length(); i++)
+        {
+           for(int j = 0; j < pixelList.length();j++)
+           {
+
+            std::cout<< pixelList.at(i).at(j);
+           }
+        }
         frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
-    sprite["numberOfFrames"] = sample.length();
-    sprite["width"] = size;
-    sprite["height"] = size;
+    sprite["numberOfFrames"] = imgVect.length();
+    sprite["width"] = int(size);
+    sprite["height"] = int(size);
 
 
     QJsonDocument savedDoc(sprite);
@@ -291,7 +313,6 @@ void MainWindow::saveSprite()
     QFile saveFile(fileName);
     saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
     saveFile.write(savedDoc.toJson(QJsonDocument::Indented));
-
 
 }
 
@@ -310,7 +331,46 @@ void MainWindow::saveAsSprite()
 void MainWindow::exportSprite()
 {
     std::cout<<"export"<<std::endl;
+    //Temp
 
+    //Var
+
+    if(fileName == "" || fileName.isNull())
+    {
+        std::cout<< "NO FILE NAME" << std::endl;
+
+    }
+    else
+    {
+    std::vector<uint8_t> imageVect;
+
+    GifWriter g;
+    std::string stringFileName = fileName.toStdString();
+    std::cout<<stringFileName <<std::endl;
+    stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
+    stringFileName.append("gif");
+    const char* charFileName = stringFileName.c_str();
+    std::cout<< charFileName << std::endl;
+
+    //int width = 100;
+    //int height = 200;
+    //std::vector<uint8_t> black(width * height * 4, 0);
+    //std::vector<uint8_t> white(width * height * 4, 255);
+
+    //make an array of rgba values
+
+    //QVector<RGB> rgbvalues (r,g,b,a);
+    //QVector<uint_8> pixelValues
+
+
+    GifBegin(&g, charFileName, size, size, 100);
+    for(int i = 0; i < pixelList.length(); i++)
+    {
+      GifWriteFrame(&g, pixelList.at(i).data(), size, size, 100);
+
+    }
+    GifEnd(&g);
+    }
 }
 
 void MainWindow::closeSprite()
@@ -322,3 +382,5 @@ void MainWindow::openHelpMenu()
 {
     help->show();
 }
+
+
