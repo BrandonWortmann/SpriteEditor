@@ -288,14 +288,6 @@ void MainWindow::saveSprite()
         }
 
         pixelList.append(pixelVect);
-        for(int i = 0; i < pixelList.length(); i++)
-        {
-           for(int j = 0; j < pixelList.length();j++)
-           {
-
-            std::cout<< pixelList.at(i).at(j);
-           }
-        }
         frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
