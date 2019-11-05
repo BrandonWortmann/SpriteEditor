@@ -2,6 +2,7 @@
 #include "ui_framemanager.h"
 #include <QPixmap>
 #include <QPushButton>
+#include <QTimer>
 #include <stdio.h>
 
 using namespace std;
@@ -24,7 +25,7 @@ void FrameManager::setupFrameManager()
     currFrame = 0;
     ui->currLabelNum->setText("0");
 
-    sendCurrFrame();
+
 
     QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
     QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
@@ -36,6 +37,9 @@ void FrameManager::setupFrameManager()
     ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
     ui->nextLabel->setScaledContents(true);
 
+    emit changeCurrFrame(startingImage);
+    update();
+
     connect(ui->newFrameButton, &QPushButton::pressed,
             this, &FrameManager::addFrame);
     connect(ui->deleteFrameButton, &QPushButton::pressed,
@@ -44,6 +48,14 @@ void FrameManager::setupFrameManager()
             this, &FrameManager::moveLeft);
     connect(ui->rightButton, &QPushButton::pressed,
             this, &FrameManager::moveRight);
+}
+
+std::vector<QImage*>* FrameManager::getFrames() {
+    return &frames;
+}
+
+void FrameManager::setFrames(std::vector<QImage*>* newFrames) {
+    frames = *newFrames;
 }
 
 /*********
@@ -55,9 +67,8 @@ void FrameManager::addFrame()
     QImage* newFrame = new QImage();
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
-    sendCurrFrame();
+    emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(&frames);
-    // TODO : move view to end
 }
 
 void FrameManager::deleteFrame()
@@ -73,7 +84,7 @@ void FrameManager::deleteFrame()
         currFrame--;
     }
 
-    sendCurrFrame();
+    emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(&frames);
 }
 
@@ -85,7 +96,7 @@ void FrameManager::moveLeft()
     }
 
     currFrame--;
-    sendCurrFrame();
+    emit changeCurrFrame(frames[currFrame]);
 }
 
 void FrameManager::moveRight()
@@ -95,11 +106,34 @@ void FrameManager::moveRight()
     }
     currFrame++;
 
-    sendCurrFrame();
+    emit changeCurrFrame(frames[currFrame]);
 }
 
-void FrameManager::sendCurrFrame()
-{
+//void FrameManager::sendCurrFrame()
+//{
+//    if(currFrame != 0) {
+//        ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
+//        ui->prevLabelNum->setText(QString::number(currFrame));
+//    }
+//    else {
+//        ui->prevLabelNum->setText("");
+//    }
+
+//    if(currFrame < frames.size() - 1) {
+//        ui->nextLabel->setPixmap(QPixmap::fromImage(*frames[currFrame + 1]));
+//        ui->nextLabelNum->setText(QString::number(currFrame + 2));
+//    }
+//    else {
+//        ui->nextLabelNum->setText("");
+//    }
+
+//    ui->currLabel->setPixmap(QPixmap::fromImage(*frames[currFrame]));
+//    ui->currLabelNum->setText(QString::number(currFrame + 1));
+
+//    emit changeCurrFrame(frames[currFrame]);
+//}
+
+void FrameManager::update() {
     if(currFrame != 0) {
         ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
         ui->prevLabelNum->setText(QString::number(currFrame));
@@ -118,6 +152,5 @@ void FrameManager::sendCurrFrame()
 
     ui->currLabel->setPixmap(QPixmap::fromImage(*frames[currFrame]));
     ui->currLabelNum->setText(QString::number(currFrame + 1));
-
-    emit changeCurrFrame(frames[currFrame]);
+    QTimer::singleShot(50, this, &FrameManager::update);
 }

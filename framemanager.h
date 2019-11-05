@@ -18,8 +18,8 @@ public:
     Ui::FrameManager *ui;
 
     void setupFrameManager();
-    std::vector<QImage*> getFrames();
-    void setFrames(std::vector<QImage*>);
+    std::vector<QImage*>* getFrames();
+    void setFrames(std::vector<QImage*>*);
     void setSize(int);
     void reloadFrame();
 
@@ -37,8 +37,7 @@ private:
     std::vector<QImage*> frames;
     size_t currFrame;
 
-    void sendCurrFrame();
-
+    void update();
 };
 
 #endif // FRAMEMANAGER_H

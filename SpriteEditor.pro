@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    animationpopup.cpp \
     animationpreview.cpp \
     drawframe.cpp \
     drawscene.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
     toolbar.cpp
 
 HEADERS += \
+    animationpopup.h \
     animationpreview.h \
     drawframe.h \
     drawscene.h \
@@ -37,6 +39,7 @@ HEADERS += \
     toolbar.h
 
 FORMS += \
+    animationpopup.ui \
     animationpreview.ui \
     drawframe.ui \
     framemanager.ui \

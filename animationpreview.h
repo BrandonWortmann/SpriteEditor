@@ -2,6 +2,7 @@
 #define ANIMATIONPREVIEW_H
 
 #include <QWidget>
+#include "animationpopup.h"
 
 namespace Ui {
 class AnimationPreview;
@@ -23,6 +24,12 @@ public slots:
     void sliderMoved(int);
 private:
     std::vector<QImage*>* frames;
+    std::vector<QImage*>* tempFrames;
+    size_t currFrame;
+    AnimationPopup *animPop;
+    void update();
+    void displayFrames();
+
 };
 
 #endif // ANIMATIONPREVIEW_H
