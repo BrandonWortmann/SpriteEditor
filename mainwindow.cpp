@@ -165,7 +165,7 @@ void MainWindow::changeCurrFrame(QImage* newFrame) {
     drawFrame->setFrame(newFrame);
 }
 
-void MainWindow::changeFrameStructure(std::vector<QImage*>* frames) {
+void MainWindow::changeFrameStructure(QVector<QImage*> frames) {
 
 }
 

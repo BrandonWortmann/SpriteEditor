@@ -17,15 +17,15 @@ public:
     ~AnimationPreview();
     Ui::AnimationPreview *ui;
     void setupAnimationPreview();
-    void setFrames(std::vector<QImage*>*);
+    void setFrames(QVector<QImage*>);
 
 
 public slots:
     void sliderMoved(int);
 private:
-    std::vector<QImage*>* frames;
-    std::vector<QImage*>* tempFrames;
-    size_t currFrame;
+    QVector<QImage*> frames;
+    QVector<QImage*> tempFrames;
+    int currFrame;
     AnimationPopup *animPop;
     void update();
     void displayFrames();

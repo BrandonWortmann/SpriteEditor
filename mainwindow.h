@@ -42,7 +42,7 @@ public slots:
 
     // frameManager
     void changeCurrFrame(QImage*);
-    void changeFrameStructure(std::vector<QImage*>*);
+    void changeFrameStructure(QVector<QImage*>);
 
     // mainWindow
     void newSprite();

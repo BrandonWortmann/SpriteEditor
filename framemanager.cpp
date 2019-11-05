@@ -3,6 +3,7 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QTimer>
+#include <QVector>
 #include <stdio.h>
 
 using namespace std;
@@ -50,12 +51,12 @@ void FrameManager::setupFrameManager()
             this, &FrameManager::moveRight);
 }
 
-std::vector<QImage*>* FrameManager::getFrames() {
-    return &frames;
+QVector<QImage*> FrameManager::getFrames() {
+    return frames;
 }
 
-void FrameManager::setFrames(std::vector<QImage*>* newFrames) {
-    frames = *newFrames;
+void FrameManager::setFrames(QVector<QImage*> newFrames) {
+    frames = newFrames;
 }
 
 /*********
@@ -64,11 +65,11 @@ void FrameManager::setFrames(std::vector<QImage*>* newFrames) {
 
 void FrameManager::addFrame()
 {
-    QImage* newFrame = new QImage();
+    QImage* newFrame = new QImage(QSize(64, 64), QImage::Format_ARGB32);
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);
-    emit changeFrameStructure(&frames);
+    emit changeFrameStructure(frames);
 }
 
 void FrameManager::deleteFrame()
@@ -85,7 +86,7 @@ void FrameManager::deleteFrame()
     }
 
     emit changeCurrFrame(frames[currFrame]);
-    emit changeFrameStructure(&frames);
+    emit changeFrameStructure(frames);
 }
 
 void FrameManager::moveLeft()
