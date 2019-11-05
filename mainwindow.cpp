@@ -46,7 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // showing images for frames in qt
     frameManager->setupFrameManager();
-    animationPreview->setupAnimationPreview();
+    animationPreview->setupAnimationPreview(frameManager->getFrames());
+    drawFrame->setFrame(frameManager->getFrames()[0]);
 
     QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
     QIcon pencilIcon;
@@ -167,7 +168,7 @@ void MainWindow::changeCurrFrame(QImage* newFrame) {
 }
 
 void MainWindow::changeFrameStructure(QVector<QImage*> frames) {
-
+    animationPreview->setFrames(frames);
 }
 
 void MainWindow::newSprite()

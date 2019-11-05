@@ -16,7 +16,7 @@ public:
     explicit AnimationPreview(QWidget *parent = nullptr);
     ~AnimationPreview();
     Ui::AnimationPreview *ui;
-    void setupAnimationPreview();
+    void setupAnimationPreview(QVector<QImage*>);
     void setFrames(QVector<QImage*>);
 
 
