@@ -1,29 +1,38 @@
+/**
+ * This controls everything for the DrawFrame.
+ *
+ * Author: Wasted Potential
+ */
+
 #include "drawscene.h"
 #include <cmath>
 #include <QTimer>
 
+/**
+ * Sets default values and constructs the DrawScene.
+ */
 DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
 {
     prevPoint.setX(0);
     prevPoint.setY(0);
     pencilSize = 0;
-    size = 64; //placeholder
-    zoom = size; //placeholder
-    frame = new QImage(QSize(size, size), QImage::Format_ARGB32); //placeholder
     color = Qt::black;
     mousePressed = false;
     setSceneRect(0, 0, 514, 514);
     grid = false;
-    tlx = tly = 0; //placeholder
     tool = pencil;
-    update(); //placeholder
 }
 
+/**
+ * Updates the DrawScene based on the saved image and whether or not the grid is on.
+ */
 void DrawScene::update()
 {
+    // Set the grid if it is toggled on.
     if (grid)
     {
         bool isGray = false;
+        // Draw every square for the grid
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -35,16 +44,19 @@ void DrawScene::update()
             }
             isGray = !isGray;
         }
+        // Draw all of the lines for the grid
         for (int i = 0; i < zoom + 1; i++)
         {
             addLine((i * 512) / zoom, 0, (i * 512) / zoom, 514, QPen(Qt::black));
             addLine(0, (i * 512) / zoom, 514, (i * 512) / zoom, QPen(Qt::black));
         }
     }
+    // Sets everything to white when the grid is toggled off.
     else
     {
         addRect(0, 0, 515, 515, QPen(QColor(0,0,0,0)), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
     }
+    // Add everything from the current image.
     for (int i = 0; i < zoom; i++)
     {
         for (int j = 0; j < zoom; j++)
@@ -61,17 +73,21 @@ void DrawScene::update()
     }
 }
 
-
+/**
+ * Handles when the mouse is pressed.
+ */
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
     mousePressed = true;
     QPoint point = event->scenePos().toPoint();
+    // Handles pencil and eraser
     if(tool == pencil || tool == eraser)
     {
         setSaved(false);
         addPoint(point, false);
     }
+    // Handles bucket
     else if(tool == bucket)
     {
         setSaved(false);
@@ -80,15 +96,23 @@ void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     prevPoint = point;
 }
 
+/**
+ * Handles when the mouse is released.
+ */
 void DrawScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     mousePressed = false;
 }
 
+/**
+ * Handles when the mouse is moved.
+ */
 void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    // Handles pencil and eraser when the mouse is pressed
     if(mousePressed && (tool == pencil || tool == eraser))
     {
+        // Calculate the line between the previous point and the current point.
         QPoint point = event->scenePos().toPoint();
         double xDiff = point.x() - prevPoint.x();
         double yDiff = point.y() - prevPoint.y();
@@ -96,6 +120,7 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         xDiff /= scalar;
         yDiff /= scalar;
         QPointF draw(prevPoint.x(), prevPoint.y());
+        // Draw points along that line.
         for (int i = 0; i < scalar; i++)
         {
             draw.rx() += xDiff;
@@ -104,17 +129,22 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         prevPoint = point;
     }
+    // Handles pencil and eraser when the mouse is not pressed.
     else if(!mousePressed && (tool == pencil || tool == eraser))
     {
+        // Restore the previous point and add the current point.
         QPoint point = event->scenePos().toPoint();
         addPoint(prevPoint, true);
         addPoint(point, false);
         prevPoint = point;
         prevCursor = QCursor::pos();
+        // Remove the previous point in 100 ms.
         QTimer::singleShot(100, this, &DrawScene::timedRemove);
     }
+    // Handles hand when the mouse is pressed.
     else if(mousePressed && tool == hand)
     {
+        // Set tlx and tly based on the current and previous points.
         QPoint point = event->scenePos().toPoint();
         tlx -= ((point.x() - prevPoint.x()) * zoom) / 512;
         tly -= ((point.y() - prevPoint.y()) * zoom) / 512;
@@ -139,6 +169,10 @@ void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+/**
+ * Restores the previous point if the cursor has moved.
+ * This handles the cursor moving off of the scene properly.
+ */
 void DrawScene::timedRemove()
 {
     if (prevCursor != QCursor::pos())
@@ -147,11 +181,16 @@ void DrawScene::timedRemove()
     }
 }
 
+/**
+ * Adds a point to the scene and frame. Restore tells this if we
+ * should use the current color or the color on the QImage.
+ */
 void DrawScene::addPoint(QPoint point, bool restore)
 {
+    // Makes sure the cursor is on the window and the tool is a pencil or eraser.
     if (point.x() >= 0 && point.x() < 512 && point.y() >= 0 && point.y() < 512 && (tool == pencil || tool == eraser))
     {
-        QPoint tlp(point.x(), point.y());
+        // Finds the x and y dictated by the cursor position.
         int maxI, maxJ;
         int x = (point.x() * zoom) / 512;
         int y = (point.y() * zoom) / 512;
@@ -160,12 +199,15 @@ void DrawScene::addPoint(QPoint point, bool restore)
         {
             pixSize -= 1;
         }
+        // Handles different pencil sizes.
         switch(pencilSize)
         {
         case 0:
+            // Draw 1x1 square when size is 0.
             maxI = maxJ = 1;
             break;
         case 1:
+            // Correct the x and y.
             if((point.x() % (512 / zoom)) < (256 / zoom))
             {
                 x--;
@@ -174,7 +216,9 @@ void DrawScene::addPoint(QPoint point, bool restore)
             {
                 y--;
             }
+            // Draw 2x2 square when size is 1.
             maxI = maxJ = 2;
+            // Correct the x and y again and change the size of the square accordingly.
             if(x < 0)
             {
                 x++;
@@ -185,6 +229,7 @@ void DrawScene::addPoint(QPoint point, bool restore)
                 y++;
                 maxJ = 1;
             }
+            // Change the size of the square when it goes off of the frame.
             if(x >= zoom - 1)
             {
                 maxI = 1;
@@ -195,9 +240,12 @@ void DrawScene::addPoint(QPoint point, bool restore)
             }
             break;
         case 2:
+            // Correct the x and y.
             x--;
             y--;
+            // Draw 3x3 square when size is 2.
             maxI = maxJ = 3;
+            // Correct the x and y again and change the size of the square accordingly.
             if(x < 0)
             {
                 x++;
@@ -208,6 +256,7 @@ void DrawScene::addPoint(QPoint point, bool restore)
                 y++;
                 maxJ = 2;
             }
+            // Change the size of the square when it goes off of the frame.
             if(x >= zoom - 2)
             {
                 maxI = 2;
@@ -218,9 +267,12 @@ void DrawScene::addPoint(QPoint point, bool restore)
             }
             break;
         case 3:
+            // Correct the x and y.
             x -= (point.x() % (512 / zoom)) < (256 / zoom) ? 2 : 1;
             y -= (point.y() % (512 / zoom)) < (256 / zoom) ? 2 : 1;
+            // Draw a 4x4 square when the size is 3.
             maxI = maxJ = 4;
+            // Correct the x and y again and change the size of the square accordingly.
             if(x < 0)
             {
                 x++;
@@ -241,6 +293,7 @@ void DrawScene::addPoint(QPoint point, bool restore)
                     maxJ = 2;
                 }
             }
+            // Change the size of the square when it goes off of the frame.
             if(x >= zoom - 3)
             {
                 maxI = 3;
@@ -259,12 +312,15 @@ void DrawScene::addPoint(QPoint point, bool restore)
             }
             break;
         default:
+            // This should never be hit, if it is somehow, stop the method.
             return;
         }
+        // Use the maxI and maxJ to draw the proper amount of squares.
         for(int i = 0; i < maxI; i++)
         {
             for(int j = 0; j < maxJ; j++)
             {
+                // Draws the background properly to handle alpha values.
                 if(grid && ((x + i) + (y + j)) % 2 == 1)
                 {
                     addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
@@ -275,8 +331,10 @@ void DrawScene::addPoint(QPoint point, bool restore)
                     addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
                         QPen(QColor(0,0,0,0)), QBrush(Qt::white, Qt::BrushStyle::SolidPattern));
                 }
+                // Handle drawing points with the pencil.
                 if(tool == pencil)
                 {
+                    // Draw the current color on the frame and scene.
                     if(!restore)
                     {
                         if(mousePressed)
@@ -288,12 +346,15 @@ void DrawScene::addPoint(QPoint point, bool restore)
                     }
                     else
                     {
+                        // Draw the color that was on the frame on the scene.
                         addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
                             QPen(QColor(0,0,0,0)), QBrush(frame->pixelColor(x + i + tlx, y + j + tly), Qt::BrushStyle::SolidPattern));
                     }
                 }
+                // Handle erasing points with the eraser.
                 else if(tool == eraser)
                 {
+                    // Replace the point on the frame with color 0, 0, 0, 0.
                     if(!restore)
                     {
                         if(mousePressed)
@@ -301,6 +362,7 @@ void DrawScene::addPoint(QPoint point, bool restore)
                             frame->setPixelColor(x + i + tlx, y + j + tly, QColor(0,0,0,0));
                         }
                     }
+                    // Draw the color that was on the frame on the scene.
                     else
                     {
                         addRect((((x + i) * 512) / zoom) + 1, (((y + j) * 512) / zoom) + 1, pixSize, pixSize,
@@ -312,6 +374,9 @@ void DrawScene::addPoint(QPoint point, bool restore)
     }
 }
 
+/**
+ * fills in a region with a certain color
+ */
 void DrawScene::fill(QPoint point)
 {
     QPoint currPoint = QPoint(((point.x() * zoom) / 512) + tlx, ((point.y() * zoom) / 512) + tly);
@@ -324,6 +389,9 @@ void DrawScene::fill(QPoint point)
     update();
 }
 
+/**
+ * A recursive helper method to help the fill method
+ */
 void DrawScene::fillHelper(QPoint point, QColor currColor)
 {
     frame->setPixelColor(point, color);
@@ -349,11 +417,17 @@ void DrawScene::fillHelper(QPoint point, QColor currColor)
     }
 }
 
+/**
+ * Sets the current color
+ */
 void DrawScene::setColor(QColor c)
 {
     color = c;
 }
 
+/**
+ * sets the tool to the given tool
+ */
 void DrawScene::setTool(int toolNum)
 {
     switch(toolNum)
@@ -380,11 +454,17 @@ void DrawScene::setTool(int toolNum)
     }
 }
 
+/**
+ * toggles the grid on and off
+ */
 void DrawScene::gridToggle()
 {
     grid = !grid;
 }
 
+/**
+ * Sets the drawScene to the currently selected frame
+ */
 void DrawScene::setFrame(QImage* frame)
 {
     this->frame = frame;
@@ -392,11 +472,17 @@ void DrawScene::setFrame(QImage* frame)
     tlx = tly = 0;
 }
 
+/**
+ * sets the size of the pencil
+ */
 void DrawScene::setPencilSize(int size)
 {
     pencilSize = size;
 }
 
+/**
+ * Zooms in and out of the drawScene
+ */
 void DrawScene::zoomScene(bool zoomIn)
 {
     if(zoomIn && zoom > 4)

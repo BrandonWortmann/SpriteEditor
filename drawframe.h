@@ -1,3 +1,8 @@
+/*
+ * The header file for the DrawFrame class
+ * Author: Wasted Potential
+*/
+
 #ifndef DRAWFRAME_H
 #define DRAWFRAME_H
 
@@ -17,7 +22,6 @@ public:
     ~DrawFrame() override;
     Ui::DrawFrame *ui;
     void setupFrame();
-    void setSize(int);
     void setPencilSize(int);
     void setcolor(QColor);
     void zoom(bool);
