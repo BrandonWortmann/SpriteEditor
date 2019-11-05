@@ -21,7 +21,14 @@ FrameManager::~FrameManager()
 
 void FrameManager::setupFrameManager()
 {
-    QImage* startingImage = new QImage();
+    QImage* startingImage = new QImage(QSize(64, 64), QImage::Format_ARGB32);
+
+    for(int i = 0; i < 64; i++) {
+        for(int j =0; j < 64; j++) {
+            QColor color(255, 255, 255, 255);
+            startingImage->setPixelColor(i, j, color);
+        }
+    }
     frames.push_back(startingImage);
     currFrame = 0;
     ui->currLabelNum->setText("0");
@@ -66,6 +73,12 @@ void FrameManager::setFrames(QVector<QImage*> newFrames) {
 void FrameManager::addFrame()
 {
     QImage* newFrame = new QImage(QSize(64, 64), QImage::Format_ARGB32);
+    for(int i = 0; i < 64; i++) {
+        for(int j =0; j < 64; j++) {
+            QColor color(255, 255, 255, 255);
+            newFrame->setPixelColor(i, j, color);
+        }
+    }
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);

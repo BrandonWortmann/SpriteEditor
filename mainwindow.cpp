@@ -182,9 +182,10 @@ void MainWindow::newSprite()
             saveSprite();
         }
     }
-    QVector<QImage*>* pic;
+    QVector<QImage*> pic;
     QImage img(QSize(size, size), QImage::Format_ARGB32);
-    pic->append(&img);
+    //TODO WHITEOUT
+    pic.append(&img);
     frameManager->setFrames(pic);
 
 }
@@ -254,7 +255,7 @@ void MainWindow::openSprite()
             }
             sprite.append(img);
         }
-        frameManager->setFrames(&sprite);
+        frameManager->setFrames(sprite);
     }
     //TODO - Drawscene/Drawframe method to send frame data
 
@@ -271,9 +272,9 @@ void MainWindow::saveSprite()
    // int size =// imgVect.at(0)->size().width();
     QJsonObject sprite;
     QJsonObject frames;
-    QVector<QImage*>* imgVect = frameManager->getFrames();
+    QVector<QImage*> imgVect = frameManager->getFrames();
 
-    for(int frameNum = 0; frameNum < imgVect->length(); frameNum++)
+    for(int frameNum = 0; frameNum < imgVect.length(); frameNum++)
     {
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
@@ -285,7 +286,7 @@ void MainWindow::saveSprite()
             QJsonArray colArray;
             for(int j = 0; j < int(size); j++)
             {
-                QImage *img = imgVect->at(frameNum);
+                QImage *img = imgVect.at(frameNum);
                 QRgb rgba = img->pixel(i,j);
                 QJsonArray rgbaValues;
                 rgbaValues.append(QJsonValue(qRed(rgba)));
@@ -307,7 +308,7 @@ void MainWindow::saveSprite()
         frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
-    sprite["numberOfFrames"] = imgVect->length();
+    sprite["numberOfFrames"] = imgVect.length();
     sprite["width"] = int(size);
     sprite["height"] = int(size);
 
@@ -324,7 +325,7 @@ void MainWindow::saveSprite()
 void MainWindow::saveAsSprite()
 {
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
-    if(!fileName.isNull() || fileName != "")
+    if(!fname.isNull() || fname != "")
     {
         fileName = fname;
         saveSprite();
