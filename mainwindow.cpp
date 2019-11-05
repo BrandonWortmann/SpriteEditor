@@ -6,49 +6,49 @@
 #include "ui_drawframe.h"
 #include "ui_framemanager.h"
 #include "ui_toolbar.h"
-#include <QDockWidget>
-#include <QVBoxLayout>
+#include "ui_sizepopup.h"
 #include <QPushButton>
 #include <QColor>
-#include <iostream>
-#include <QComboBox>
 #include <QFileDialog>
-#include "ui_sizepopup.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QPalette>
 #include <QJsonObject>
-#include <QByteArray>
-#include <QRgba64>
 #include <QMessageBox>
 
+/**
+ * @brief MainWindow::MainWindow
+ * Initializes all necessary values,
+ * and establishes connections
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    // Instantiating objects to work with
     toolBar = new ToolBar;
     frameManager = new FrameManager;
     animationPreview = new AnimationPreview;
     drawFrame = new DrawFrame;
     help = new HelpPopup;
 
+    // Setting up the proper UI's to the widgets
     toolBar->ui->setupUi(ui->tbWidge);
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
     drawFrame->setupFrame();
 
-
-
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
 
-    // showing images for frames in qt
+    // Showing images for frames in qt
     frameManager->setupFrameManager();
     animationPreview->setupAnimationPreview();
 
+    // Assigning toolbar images to buttons
     QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
     QIcon pencilIcon;
     pencilIcon.addPixmap(pencilPix);
@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     isSaved = true;
     size = 64;
 
+    // Connections between mainwindow
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
@@ -105,9 +106,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
     connect(drawFrame->drawScene, &DrawScene::setSaved, this, &MainWindow::setSaved);
-    //TODO - change set size slot from drawFrame to frameManager
 }
 
+/**
+ * @brief MainWindow::~MainWindow
+ * Removes all heap allocated memory
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -118,77 +122,140 @@ MainWindow::~MainWindow()
     delete help;
 }
 
-// DrawFrame slots
-
+/**
+ * @brief MainWindow::setColor
+ * DrawFrame slot
+ * Sets the color of the pencil
+ */
 void MainWindow::setColor(QColor color)
 {
     drawFrame->setcolor(color);
 }
 
+/**
+ * @brief MainWindow::setSize
+ * DrawFrame slot
+ * Sets the size of the window dimension
+ */
 void MainWindow::setSize(int dimension)
 {
     drawFrame->setSize(dimension);
     size = uint(dimension);
 }
 
+/**
+ * @brief MainWindow::setTool
+ * DrawFrame slot
+ * Sets the tool picked by the user
+ */
 void MainWindow::setTool(int tool)
 {
     toolBar->ui->pencilBtn->setChecked(false);
     toolBar->ui->handBtn->setChecked(false);
     toolBar->ui->eraserBtn->setChecked(false);
     toolBar->ui->bucketBtn->setChecked(false);
-
     drawFrame->setTool(tool);
 }
 
+/**
+ * @brief MainWindow::toggleGrid
+ * DrawFrame slot
+ * Notifies the DrawFrame when the grid has been picked
+ */
 void MainWindow::toggleGrid()
 {
     drawFrame->gridToggle();
 }
 
+/**
+ * @brief MainWindow::toggleZoomIn
+ * DrawFrame slot
+ * Notifies the DrawFrame when the zoom
+ * in has been picked
+ */
 void MainWindow::toggleZoomIn()
 {
     drawFrame->zoom(true);
 }
 
+/**
+ * @brief MainWindow::toggleZoomOut
+ * DrawFrame slot
+ * Notifies the DrawFrame when the zoom
+ * out has been picked
+ */
 void MainWindow::toggleZoomOut()
 {
     drawFrame->zoom(false);
 }
 
+/**
+ * @brief MainWindow::setPencilSize
+ * DrawFrame slot
+ * Sets the pencil sizes
+ */
 void MainWindow::setPencilSize(int size)
 {
     drawFrame->setPencilSize(size);
 }
 
-// FrameManager slots
 
+/**
+ * @brief MainWindow::changeCurrFrame
+ * FrameManager slot
+ * Changes the current frame that is displayed
+ */
 void MainWindow::changeCurrFrame(QImage* newFrame) {
     drawFrame->setFrame(newFrame);
 }
 
+/**
+ * @brief MainWindow::changeFrameStructure
+ * FrameManager slot
+ * Changes the frame structure in the MainWindows
+ */
 void MainWindow::changeFrameStructure(QVector<QImage*> frames) {
 
 }
 
+/**
+ * @brief MainWindow::newSprite
+ * Creates a new sprite. Gives the
+ * user a blank canvas
+ */
 void MainWindow::newSprite()
 {
     if(!isSaved)
     {
+        // Saving dialog box
         QMessageBox warning;
-        warning.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
+        warning.setStandardButtons(QMessageBox::Save | QMessageBox::No);
+        warning.setInformativeText("Unsaved Changes. Would you like to save?");
         int ret = warning.exec();
+
         if(ret == QMessageBox::Save)
         {
             saveSprite();
         }
     }
-    QVector<QImage*> pic;
-    QImage img(QSize(size, size), QImage::Format_ARGB32);
-    //TODO WHITEOUT
-    pic.append(&img);
-    frameManager->setFrames(pic);
 
+    // New fileName needs to be chosen
+    fileName = "";
+
+    // New frames, fills frame to white
+    QVector<QImage*> pic;
+    QImage *img = new QImage(QSize(64, 64), QImage::Format_ARGB32);
+    QColor color(255, 255, 255, 255);
+    for (int i = 0; i < 64; i++)
+    {
+        for (int j = 0; j < 64; j++)
+        {
+            img->setPixelColor(i, j, color);
+        }
+    }
+
+    pic.append(img);
+    frameManager->setFrames(pic);
 }
 
 void MainWindow::openSprite()
@@ -331,23 +398,19 @@ void MainWindow::saveAsSprite()
 
 void MainWindow::exportSprite()
 {
-    if(fileName != "" || !fileName.isNull())
+    saveSprite();
+    GifWriter g;
+    std::string stringFileName = fileName.toStdString();
+    stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
+    stringFileName.append("gif");
+    const char* charFileName = stringFileName.c_str();
+
+    GifBegin(&g, charFileName, size, size, 50);
+    for(int i = 0; i < pixelList.length(); i++)
     {
-        saveSprite();
-        GifWriter g;
-        std::string stringFileName = fileName.toStdString();
-        stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
-        stringFileName.append("gif");
-        const char* charFileName = stringFileName.c_str();
-
-        GifBegin(&g, charFileName, size, size, 50);
-        for(int i = 0; i < pixelList.length(); i++)
-        {
-            GifWriteFrame(&g, pixelList.at(i).data(), size, size, 50);
-        }
-        GifEnd(&g);
-
+        GifWriteFrame(&g, pixelList.at(i).data(), size, size, 50);
     }
+    GifEnd(&g);
 }
 
 void MainWindow::closeSprite()
