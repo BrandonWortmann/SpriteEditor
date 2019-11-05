@@ -184,7 +184,7 @@ void MainWindow::newSprite()
         }
     }
     QVector<QImage*> pic;
-    QImage img(QSize(int(size), int(size)), QImage::Format_ARGB32);
+    QImage img(QSize(size, size), QImage::Format_ARGB32);
     //TODO WHITEOUT
     pic.append(&img);
     frameManager->setFrames(pic);
