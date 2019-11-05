@@ -126,8 +126,9 @@ void MainWindow::setColor(QColor color)
 
 void MainWindow::setSize(int dimension)
 {
-    drawFrame->setSize(dimension);
+    //drawFrame->setSize(dimension);
     size = uint(dimension);
+    frameManager->setSize(dimension);
 }
 
 void MainWindow::setTool(int tool)
@@ -343,12 +344,12 @@ void MainWindow::exportSprite()
 
         std::vector<uint8_t> imageVect;
 
-        GifWriter g;
         std::string stringFileName = fileName.toStdString();
         stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
         stringFileName.append("gif");
         const char* charFileName = stringFileName.c_str();
 
+        GifWriter g;
         GifBegin(&g, charFileName, size, size, 100);
         for(int i = 0; i < pixelList.length(); i++)
         {
