@@ -24,7 +24,6 @@ public:
     HelpPopup *help;
     QString fileName;
 
-    QVector<QImage*> imgVect;
     QList<QVector<uint8_t>> pixelList;
     uint size;
     bool isSaved;
