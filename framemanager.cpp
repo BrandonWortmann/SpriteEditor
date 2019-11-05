@@ -50,11 +50,11 @@ void FrameManager::setupFrameManager()
             this, &FrameManager::moveRight);
 }
 
-std::vector<QImage*>* FrameManager::getFrames() {
+QVector<QImage*>* FrameManager::getFrames() {
     return &frames;
 }
 
-void FrameManager::setFrames(std::vector<QImage*>* newFrames) {
+void FrameManager::setFrames(QVector<QImage*>* newFrames) {
     frames = *newFrames;
 }
 

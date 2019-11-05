@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->ui->gridBtn->setIconSize(QSize(30,30));
 
     isSaved = true;
+    size = 64;
 
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
@@ -171,7 +172,21 @@ void MainWindow::changeFrameStructure(std::vector<QImage*>* frames) {
 
 void MainWindow::newSprite()
 {
-    std::cout<<"new"<<std::endl;
+    if(!isSaved)
+    {
+        QMessageBox warning;
+        warning.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
+        int ret = warning.exec();
+        if(ret == QMessageBox::Save)
+        {
+            saveSprite();
+        }
+    }
+    QVector<QImage*>* pic;
+    QImage img(QSize(size, size), QImage::Format_ARGB32);
+    pic->append(&img);
+    frameManager->setFrames(pic);
+
 }
 
 void MainWindow::openSprite()
@@ -220,7 +235,7 @@ void MainWindow::openSprite()
          {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
-            QImage img(QSize(size, size), QImage::Format_ARGB32);
+            QImage* img = new QImage(QSize(size, size), QImage::Format_ARGB32);
 
             for( int i = 0; i < int(size); i++)
             {
@@ -234,12 +249,12 @@ void MainWindow::openSprite()
                     int alpha = rgbaValues.at(3).toInt();
 
                     QColor color(red, green, blue, alpha);
-                    img.setPixelColor(i, j, color);
+                    img->setPixelColor(i, j, color);
                 }
             }
-            sprite.append(&img);
+            sprite.append(img);
         }
-        imgVect = sprite;
+        frameManager->setFrames(&sprite);
     }
     //TODO - Drawscene/Drawframe method to send frame data
 
@@ -256,8 +271,9 @@ void MainWindow::saveSprite()
    // int size =// imgVect.at(0)->size().width();
     QJsonObject sprite;
     QJsonObject frames;
+    QVector<QImage*>* imgVect = frameManager->getFrames();
 
-    for(int frameNum = 0; frameNum < imgVect.length(); frameNum++)
+    for(int frameNum = 0; frameNum < imgVect->length(); frameNum++)
     {
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
@@ -269,7 +285,7 @@ void MainWindow::saveSprite()
             QJsonArray colArray;
             for(int j = 0; j < int(size); j++)
             {
-                QImage *img = imgVect.at(frameNum);
+                QImage *img = imgVect->at(frameNum);
                 QRgb rgba = img->pixel(i,j);
                 QJsonArray rgbaValues;
                 rgbaValues.append(QJsonValue(qRed(rgba)));
@@ -291,7 +307,7 @@ void MainWindow::saveSprite()
         frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
-    sprite["numberOfFrames"] = imgVect.length();
+    sprite["numberOfFrames"] = imgVect->length();
     sprite["width"] = int(size);
     sprite["height"] = int(size);
 
@@ -301,6 +317,7 @@ void MainWindow::saveSprite()
     QFile saveFile(fileName);
     saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
     saveFile.write(savedDoc.toJson(QJsonDocument::Indented));
+    setSaved(true);
 
 }
 
@@ -318,6 +335,11 @@ void MainWindow::exportSprite()
 {
     if(fileName != "" || !fileName.isNull())
     {
+        if(!isSaved)
+        {
+          saveSprite();
+        }
+
         std::vector<uint8_t> imageVect;
 
         GifWriter g;
@@ -337,6 +359,13 @@ void MainWindow::exportSprite()
 
 void MainWindow::closeSprite()
 {
+    QMessageBox warning;
+    warning.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
+    int ret = warning.exec();
+    if(ret == QMessageBox::Save)
+    {
+        saveSprite();
+    }
     this->close();
 }
 

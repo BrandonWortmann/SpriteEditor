@@ -24,7 +24,6 @@ public:
     HelpPopup *help;
     QString fileName;
 
-    QVector<QImage*> imgVect;
     QList<QVector<uint8_t>> pixelList;
     uint size;
     bool isSaved;
@@ -42,7 +41,7 @@ public slots:
 
     // frameManager
     void changeCurrFrame(QImage*);
-    void changeFrameStructure(std::vector<QImage*>*);
+    void changeFrameStructure(QVector<QImage*>*);
 
     // mainWindow
     void newSprite();
