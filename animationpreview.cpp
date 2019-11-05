@@ -11,10 +11,12 @@ AnimationPreview::AnimationPreview(QWidget *parent) :
     ui->setupUi(this);
 }
 
-void AnimationPreview::setupAnimationPreview()
+void AnimationPreview::setupAnimationPreview(QVector<QImage*> startingFrames)
 {
     animPop = new AnimationPopup();
     ui->displayLabel->setScaledContents(true);
+    frames = startingFrames;
+    update();
 
     connect(ui->fpsSlider, &QAbstractSlider::sliderMoved,
             this, &AnimationPreview::sliderMoved);
@@ -58,7 +60,7 @@ void AnimationPreview::displayFrames() {
     ui->displayLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
     currFrame++;
     if(currFrame == tempFrames.size()) {
-        QTimer::singleShot(5, this, &AnimationPreview::update);
+        QTimer::singleShot(int (1000.0 / ui->fpsLabel->text().split(" ")[1].toInt()), this, &AnimationPreview::update);
     }
     else {
         QTimer::singleShot(int (1000.0 / ui->fpsLabel->text().split(" ")[1].toInt()), this, &AnimationPreview::displayFrames);

@@ -30,6 +30,7 @@ signals:
 public slots:
     void addFrame();
     void deleteFrame();
+    void duplicateFrame();
     void moveLeft();
     void moveRight();
 

@@ -22,13 +22,8 @@ FrameManager::~FrameManager()
 void FrameManager::setupFrameManager()
 {
     QImage* startingImage = new QImage(QSize(64, 64), QImage::Format_ARGB32);
-
-    for(int i = 0; i < 64; i++) {
-        for(int j =0; j < 64; j++) {
-            QColor color(255, 255, 255, 255);
-            startingImage->setPixelColor(i, j, color);
-        }
-    }
+    QColor color(0, 0, 0, 0);
+    startingImage->fill(color);
     frames.push_back(startingImage);
     currFrame = 0;
     ui->currLabelNum->setText("0");
@@ -56,6 +51,8 @@ void FrameManager::setupFrameManager()
             this, &FrameManager::moveLeft);
     connect(ui->rightButton, &QPushButton::pressed,
             this, &FrameManager::moveRight);
+    connect(ui->dupFrameButton, &QPushButton::pressed,
+            this, &FrameManager::duplicateFrame);
 }
 
 QVector<QImage*> FrameManager::getFrames() {
@@ -63,7 +60,11 @@ QVector<QImage*> FrameManager::getFrames() {
 }
 
 void FrameManager::setFrames(QVector<QImage*> newFrames) {
-    frames = newFrames;
+    for(int i = 0; i < frames.size(); i++) {
+       delete frames[i];
+    }
+    for(int i = 0; i < newFrames.size(); i++)
+        frames.push_back(newFrames[i]);
 }
 
 void FrameManager::setSize(int value) {
@@ -84,13 +85,9 @@ void FrameManager::setSize(int value) {
 
 void FrameManager::addFrame()
 {
-    QImage* newFrame = new QImage(QSize(64, 64), QImage::Format_ARGB32);
-    for(int i = 0; i < 64; i++) {
-        for(int j =0; j < 64; j++) {
-            QColor color(255, 255, 255, 255);
-            newFrame->setPixelColor(i, j, color);
-        }
-    }
+    QImage* newFrame = new QImage(frames[0]->size(), QImage::Format_ARGB32);
+    QColor color(0, 0, 0, 0);
+    newFrame->fill(color);
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);
@@ -110,6 +107,14 @@ void FrameManager::deleteFrame()
         currFrame--;
     }
 
+    emit changeCurrFrame(frames[currFrame]);
+    emit changeFrameStructure(frames);
+}
+
+void FrameManager::duplicateFrame() {
+    QImage dupFrame = frames[currFrame]->copy(0, 0, frames[currFrame]->height(), frames[currFrame]->width());
+    frames.push_back(&dupFrame);
+    currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);
 }
@@ -135,37 +140,19 @@ void FrameManager::moveRight()
     emit changeCurrFrame(frames[currFrame]);
 }
 
-//void FrameManager::sendCurrFrame()
-//{
-//    if(currFrame != 0) {
-//        ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
-//        ui->prevLabelNum->setText(QString::number(currFrame));
-//    }
-//    else {
-//        ui->prevLabelNum->setText("");
-//    }
-
-//    if(currFrame < frames.size() - 1) {
-//        ui->nextLabel->setPixmap(QPixmap::fromImage(*frames[currFrame + 1]));
-//        ui->nextLabelNum->setText(QString::number(currFrame + 2));
-//    }
-//    else {
-//        ui->nextLabelNum->setText("");
-//    }
-
-//    ui->currLabel->setPixmap(QPixmap::fromImage(*frames[currFrame]));
-//    ui->currLabelNum->setText(QString::number(currFrame + 1));
-
-//    emit changeCurrFrame(frames[currFrame]);
-//}
-
 void FrameManager::update() {
+    QImage blankImage(frames[0]->size(), QImage::Format_ARGB32);
+    if(currFrame == 0 || currFrame == frames.size() - 1) {
+        QColor newColor(0, 0, 0, 0);
+        blankImage.fill(newColor);
+    }
     if(currFrame != 0) {
         ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
         ui->prevLabelNum->setText(QString::number(currFrame));
     }
     else {
         ui->prevLabelNum->setText("");
+        ui->prevLabel->setPixmap(QPixmap::fromImage(blankImage));
     }
 
     if(currFrame < frames.size() - 1) {
@@ -174,6 +161,7 @@ void FrameManager::update() {
     }
     else {
         ui->nextLabelNum->setText("");
+        ui->nextLabel->setPixmap(QPixmap::fromImage(blankImage));
     }
 
     ui->currLabel->setPixmap(QPixmap::fromImage(*frames[currFrame]));
