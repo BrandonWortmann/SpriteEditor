@@ -18,14 +18,14 @@ public:
     Ui::FrameManager *ui;
 
     void setupFrameManager();
-    QVector<QImage*>* getFrames();
-    void setFrames(QVector<QImage*>*);
+    QVector<QImage*> getFrames();
+    void setFrames(QVector<QImage*>);
     void setSize(int);
     void reloadFrame();
 
 signals:
     void changeCurrFrame(QImage*);
-    void changeFrameStructure(QVector<QImage*>*);
+    void changeFrameStructure(QVector<QImage*>);
 
 public slots:
     void addFrame();
@@ -34,8 +34,8 @@ public slots:
     void moveRight();
 
 private:
-   QVector<QImage*> frames;
-    size_t currFrame;
+    QVector<QImage*> frames;
+    int currFrame;
 
     void update();
 };

@@ -31,7 +31,7 @@ void AnimationPreview::sliderMoved(int value)
     ui->fpsLabel->setText("FPS: " + QString::number(value));
 }
 
-void AnimationPreview::setFrames(std::vector<QImage*>* frameVector)
+void AnimationPreview::setFrames(QVector<QImage*> frameVector)
 {
     frames = frameVector;
 }
@@ -44,7 +44,7 @@ void AnimationPreview::update()
     QTimer::singleShot(5, this, &AnimationPreview::displayFrames);
 
 //    while(true) {
-//        std::vector<QImage*>* tempFrames = frames;
+//        QVector<QImage*>* tempFrames = frames;
 //        while(tempFrames == frames) {
 //            for(size_t i = 0; i < tempFrames->size(); i++) {
 //                ui->displayLabel->setPixmap(QPixmap::fromImage(*((*tempFrames)[i])));
@@ -55,9 +55,9 @@ void AnimationPreview::update()
 }
 
 void AnimationPreview::displayFrames() {
-    ui->displayLabel->setPixmap(QPixmap::fromImage(*((*tempFrames)[currFrame])));
+    ui->displayLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
     currFrame++;
-    if(currFrame == tempFrames->size()) {
+    if(currFrame == tempFrames.size()) {
         QTimer::singleShot(5, this, &AnimationPreview::update);
     }
     else {
