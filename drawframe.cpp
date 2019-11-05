@@ -13,6 +13,7 @@ void DrawFrame::setupFrame()
 {
     drawScene = new DrawScene(this);
     ui->drawView->setScene(drawScene);
+    ui->drawView->setCursor(Qt::CursorShape::CrossCursor);
 }
 
 DrawFrame::~DrawFrame()
@@ -36,10 +37,13 @@ void DrawFrame::gridToggle()
 void DrawFrame::setTool(int tool)
 {
     drawScene->setTool(tool);
-    setCursor((Qt::CursorShape::IBeamCursor));
     if(tool == 1)
     {
-        setCursor(Qt::CursorShape::OpenHandCursor);
+        ui->drawView->setCursor(Qt::CursorShape::OpenHandCursor);
+    }
+    else
+    {
+        ui->drawView->setCursor(Qt::CursorShape::CrossCursor);
     }
 }
 void DrawFrame::zoom(bool zoom)

@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     drawFrame->setupFrame();
 
 
+
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
 
@@ -127,7 +128,7 @@ void MainWindow::setColor(QColor color)
 void MainWindow::setSize(int dimension)
 {
     size = uint(dimension);
-    //frameManager->setSize(dimension);
+    frameManager->setSize(dimension);
 }
 
 void MainWindow::setTool(int tool)
@@ -236,7 +237,7 @@ void MainWindow::openSprite()
          {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
-            QImage* img = new QImage(QSize(size, size), QImage::Format_ARGB32);
+            QImage* img = new QImage(QSize(int(size), int(size)), QImage::Format_ARGB32);
 
             for( int i = 0; i < int(size); i++)
             {
@@ -250,16 +251,13 @@ void MainWindow::openSprite()
                     int alpha = rgbaValues.at(3).toInt();
 
                     QColor color(red, green, blue, alpha);
-                    img->setPixelColor(i, j, color);
+                    img->setPixelColor(j, i, color);
                 }
             }
             sprite.append(img);
         }
         frameManager->setFrames(sprite);
     }
-    //TODO - Drawscene/Drawframe method to send frame data
-
-
 }
 
 void MainWindow::saveSprite()
@@ -269,7 +267,6 @@ void MainWindow::saveSprite()
         saveAsSprite();
     }
 
-   // int size =// imgVect.at(0)->size().width();
     QJsonObject sprite;
     QJsonObject frames;
     QVector<QImage*> imgVect = frameManager->getFrames();
@@ -279,7 +276,7 @@ void MainWindow::saveSprite()
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
         QJsonArray rowArr;
-        QVector<uint8_t> pixelVect;
+        QVector<uint8_t> pixelVect(size*4);
 
         for(int i = 0; i < int(size); i++)
         {
@@ -287,17 +284,17 @@ void MainWindow::saveSprite()
             for(int j = 0; j < int(size); j++)
             {
                 QImage *img = imgVect.at(frameNum);
-                QRgb rgba = img->pixel(i,j);
+                QRgb rgba = img->pixel(j,i);
                 QJsonArray rgbaValues;
                 rgbaValues.append(QJsonValue(qRed(rgba)));
                 rgbaValues.append(QJsonValue(qGreen(rgba)));
                 rgbaValues.append(QJsonValue(qBlue(rgba)));
                 rgbaValues.append(QJsonValue(qAlpha(rgba)));
 
-                pixelVect.append(qRed(rgba));
-                pixelVect.append(qGreen(rgba));
-                pixelVect.append(qBlue(rgba));
-                pixelVect.append(qAlpha(rgba));
+                pixelVect.append((uint8_t)qRed(rgba));
+                pixelVect.append((uint8_t)qGreen(rgba));
+                pixelVect.append((uint8_t)qBlue(rgba));
+                pixelVect.append((uint8_t)qAlpha(rgba));
 
                 colArray.append(rgbaValues);
             }
@@ -336,25 +333,20 @@ void MainWindow::exportSprite()
 {
     if(fileName != "" || !fileName.isNull())
     {
-        if(!isSaved)
-        {
-          saveSprite();
-        }
-
-        std::vector<uint8_t> imageVect;
-
+        saveSprite();
+        GifWriter g;
         std::string stringFileName = fileName.toStdString();
         stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
         stringFileName.append("gif");
         const char* charFileName = stringFileName.c_str();
 
-        GifWriter g;
-        GifBegin(&g, charFileName, size, size, 100);
+        GifBegin(&g, charFileName, size, size, 50);
         for(int i = 0; i < pixelList.length(); i++)
         {
-            GifWriteFrame(&g, pixelList.at(i).data(), size, size, 100);
+            GifWriteFrame(&g, pixelList.at(i).data(), size, size, 50);
         }
         GifEnd(&g);
+
     }
 }
 
