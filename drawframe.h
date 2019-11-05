@@ -24,8 +24,6 @@ public:
     void gridToggle();
     void setFrame(QImage* frame);
     void setTool(int);
-
-private:
     DrawScene* drawScene;
 };
 

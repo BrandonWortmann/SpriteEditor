@@ -38,13 +38,14 @@ MainWindow::MainWindow(QWidget *parent)
     frameManager->ui->setupUi(ui->fmWidge);
     animationPreview->ui->setupUi(ui->apWidge);
     drawFrame->ui->setupUi(ui->dfWidge);
-    drawFrame->setupFrame();    
+    drawFrame->setupFrame();
 
     QColor black(0,0,0,255);
     toolBar->setBtnColor(black);
 
     // showing images for frames in qt
     frameManager->setupFrameManager();
+    animationPreview->setupAnimationPreview();
 
     QPixmap pencilPix("../a8-sprite-editor-f19-Nordicade/icons/pencil.svg");
     QIcon pencilIcon;
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
-
+    connect(drawFrame->drawScene, &DrawScene::setSaved, this, &MainWindow::setSaved);
 
 }
 
@@ -207,7 +208,7 @@ void MainWindow::openSprite()
 
         int numberOfFrames = jsonObj["numberOfFrames"].toInt();
         QJsonObject frames = jsonObj["frames"].toObject();
-        
+
         //temporary variable. replace later
         QVector<QImage*> sprite;
 
@@ -383,4 +384,7 @@ void MainWindow::openHelpMenu()
     help->show();
 }
 
-
+void MainWindow::setSaved(bool saved)
+{
+    isSaved = saved;
+}
