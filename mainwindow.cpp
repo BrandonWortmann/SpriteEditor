@@ -126,9 +126,8 @@ void MainWindow::setColor(QColor color)
 
 void MainWindow::setSize(int dimension)
 {
-    //drawFrame->setSize(dimension);
     size = uint(dimension);
-    frameManager->setSize(dimension);
+    //frameManager->setSize(dimension);
 }
 
 void MainWindow::setTool(int tool)

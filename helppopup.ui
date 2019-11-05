@@ -19,7 +19,7 @@
   <property name="toolTipDuration">
    <number>10</number>
   </property>
-  <widget class="QTabWidget" name="tab1">
+  <widget class="QTabWidget" name="createTab">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -29,13 +29,13 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab2">
     <attribute name="title">
      <string>Create</string>
     </attribute>
-    <widget class="QTextBrowser" name="textBrowser">
+    <widget class="QTextBrowser" name="createText">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -50,22 +50,7 @@
     <attribute name="title">
      <string>Toolbar</string>
     </attribute>
-    <widget class="QTextBrowser" name="textBrowser_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>521</width>
-       <height>421</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_3">
-    <attribute name="title">
-     <string>Draw Frame</string>
-    </attribute>
-    <widget class="QTextBrowser" name="textBrowser_3">
+    <widget class="QTextBrowser" name="toolbarText">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -80,7 +65,7 @@
     <attribute name="title">
      <string>Animation Preview</string>
     </attribute>
-    <widget class="QTextBrowser" name="textBrowser_4">
+    <widget class="QTextBrowser" name="animationPreviewText">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -95,7 +80,7 @@
     <attribute name="title">
      <string>Frame Manager</string>
     </attribute>
-    <widget class="QTextBrowser" name="textBrowser_5">
+    <widget class="QTextBrowser" name="frameManagerText">
      <property name="geometry">
       <rect>
        <x>10</x>

@@ -20,10 +20,6 @@ DrawFrame::~DrawFrame()
     delete ui;
 }
 
-void DrawFrame::setSize(int size)
-{
-
-}
 void DrawFrame::setcolor(QColor color)
 {
     drawScene->setColor(color);

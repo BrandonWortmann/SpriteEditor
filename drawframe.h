@@ -17,7 +17,6 @@ public:
     ~DrawFrame() override;
     Ui::DrawFrame *ui;
     void setupFrame();
-    void setSize(int);
     void setPencilSize(int);
     void setcolor(QColor);
     void zoom(bool);
