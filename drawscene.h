@@ -7,6 +7,8 @@
 
 class DrawScene : public QGraphicsScene
 {
+    Q_OBJECT
+
 public:
     DrawScene(QWidget* parent);
 
@@ -14,9 +16,12 @@ public:
     void setTool(int tool);
     void setColor(QColor color);
     void gridToggle();
-    void setSize(int size);
+    void setFrame(QImage* frame);
     void setPencilSize(int size);
     void zoomScene(bool in);
+
+signals:
+    void setSaved(bool saved);
 
 private:
     // data members

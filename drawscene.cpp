@@ -64,14 +64,17 @@ void DrawScene::update()
 
 void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+
     mousePressed = true;
     QPoint point = event->scenePos().toPoint();
     if(tool == pencil || tool == eraser)
     {
+        setSaved(false);
         addPoint(point, false);
     }
     else if(tool == bucket)
     {
+        setSaved(false);
         fill(point);
     }
     prevPoint = point;
@@ -382,10 +385,10 @@ void DrawScene::gridToggle()
     grid = !grid;
 }
 
-void DrawScene::setSize(int sizeInput)
+void DrawScene::setFrame(QImage* frame)
 {
-    size = sizeInput;
-    zoom = size;
+    this->frame = frame;
+    size = zoom = frame->size().width();
     tlx = tly = 0;
 }
 

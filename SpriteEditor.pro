@@ -33,6 +33,7 @@ HEADERS += \
     drawframe.h \
     drawscene.h \
     framemanager.h \
+    gif.h \
     helppopup.h \
     mainwindow.h \
     sizepopup.h \
@@ -52,3 +53,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+

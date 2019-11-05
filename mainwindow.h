@@ -24,6 +24,12 @@ public:
     HelpPopup *help;
     QString fileName;
 
+    QVector<QImage*> imgVect;
+    QList<QVector<uint8_t>> pixelList;
+    uint size;
+    bool isSaved;
+
+
 public slots:
     // drawFrame
     void setColor(QColor);
@@ -46,6 +52,7 @@ public slots:
     void exportSprite();
     void closeSprite();
     void openHelpMenu();
+    void setSaved(bool);
 
 
 signals:
@@ -55,6 +62,7 @@ signals:
 
     // new drawFrame (I think this would be a drawFrame method, not sure though)
     void newFrameSelected(QImage*);
+
 
 private:
     Ui::MainWindow *ui;

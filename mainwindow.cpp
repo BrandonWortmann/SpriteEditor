@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "toolbar.h"
+#include "gif.h"
 #include "ui_mainwindow.h"
 #include "ui_animationpreview.h"
 #include "ui_drawframe.h"
@@ -73,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->ui->gridBtn->setIcon(gridIcon);
     toolBar->ui->gridBtn->setIconSize(QSize(30,30));
 
+    isSaved = true;
+
     connect(toolBar->ui->colorBtn, &QPushButton::pressed, toolBar, &ToolBar::colorSelected);
     connect(toolBar, &ToolBar::setColor, this, &MainWindow::setColor);
     connect(toolBar->ui->sizeBtn, &QPushButton::pressed, toolBar, &ToolBar::openSize);
@@ -99,8 +102,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::exportSprite);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSprite);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpMenu);
-
-
+    connect(drawFrame->drawScene, &DrawScene::setSaved, this, &MainWindow::setSaved);
+    //TODO - change set size slot from drawFrame to frameManager
 }
 
 MainWindow::~MainWindow()
@@ -123,6 +126,7 @@ void MainWindow::setColor(QColor color)
 void MainWindow::setSize(int dimension)
 {
     drawFrame->setSize(dimension);
+    size = uint(dimension);
 }
 
 void MainWindow::setTool(int tool)
@@ -204,10 +208,11 @@ void MainWindow::openSprite()
                   return;
               }
 
-        int size = jsonObj["height"].toInt();
+        size = uint(jsonObj["height"].toInt());
+
         int numberOfFrames = jsonObj["numberOfFrames"].toInt();
         QJsonObject frames = jsonObj["frames"].toObject();
-        
+
         //temporary variable. replace later
         QVector<QImage*> sprite;
 
@@ -215,11 +220,12 @@ void MainWindow::openSprite()
          {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
-            QImage img(QSize(size, size), QImage::Format_RGBA64);
-            for( int i = 0; i < size; i++)
+            QImage img(QSize(size, size), QImage::Format_ARGB32);
+
+            for( int i = 0; i < int(size); i++)
             {
                 QJsonArray rowArr = overallArr.at(i).toArray();
-                for( int j = 0; j < size; j++)
+                for( int j = 0; j < int(size); j++)
                 {
                     QJsonArray rgbaValues = rowArr.at(j).toArray();
                     int red = rgbaValues.at(0).toInt();
@@ -233,41 +239,37 @@ void MainWindow::openSprite()
             }
             sprite.append(&img);
         }
+        imgVect = sprite;
     }
     //TODO - Drawscene/Drawframe method to send frame data
+
 
 }
 
 void MainWindow::saveSprite()
 {
-    //temp variables
-    int s = 4;
-    QVector<QImage*> sample;
-
-    QImage q;
-    sample.append(&q);
-    //temp variables (set size = real size)
-
     if(fileName.isNull() || fileName == "")
     {
         saveAsSprite();
     }
 
-    int size = s;
+   // int size =// imgVect.at(0)->size().width();
     QJsonObject sprite;
     QJsonObject frames;
 
-    for(int frameNum = 0; frameNum < sample.length(); frameNum++)
+    for(int frameNum = 0; frameNum < imgVect.length(); frameNum++)
     {
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
         QJsonArray rowArr;
-        for(int i = 0; i < size; i++)
+        QVector<uint8_t> pixelVect;
+
+        for(int i = 0; i < int(size); i++)
         {
             QJsonArray colArray;
-            for(int j = 0; j < size; j++)
+            for(int j = 0; j < int(size); j++)
             {
-                QImage *img = sample.at(frameNum);
+                QImage *img = imgVect.at(frameNum);
                 QRgb rgba = img->pixel(i,j);
                 QJsonArray rgbaValues;
                 rgbaValues.append(QJsonValue(qRed(rgba)));
@@ -275,16 +277,23 @@ void MainWindow::saveSprite()
                 rgbaValues.append(QJsonValue(qBlue(rgba)));
                 rgbaValues.append(QJsonValue(qAlpha(rgba)));
 
+                pixelVect.append(qRed(rgba));
+                pixelVect.append(qGreen(rgba));
+                pixelVect.append(qBlue(rgba));
+                pixelVect.append(qAlpha(rgba));
+
                 colArray.append(rgbaValues);
             }
             overallArray.append(colArray);
         }
+
+        pixelList.append(pixelVect);
         frames[frameNumber] = overallArray;
     }
     sprite["frames"] = frames;
-    sprite["numberOfFrames"] = sample.length();
-    sprite["width"] = size;
-    sprite["height"] = size;
+    sprite["numberOfFrames"] = imgVect.length();
+    sprite["width"] = int(size);
+    sprite["height"] = int(size);
 
 
     QJsonDocument savedDoc(sprite);
@@ -293,13 +302,10 @@ void MainWindow::saveSprite()
     saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
     saveFile.write(savedDoc.toJson(QJsonDocument::Indented));
 
-
 }
 
 void MainWindow::saveAsSprite()
 {
-    std::cout<<"saveAs"<<std::endl;
-
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
     if(!fileName.isNull() || fileName != "")
     {
@@ -310,8 +316,23 @@ void MainWindow::saveAsSprite()
 
 void MainWindow::exportSprite()
 {
-    std::cout<<"export"<<std::endl;
+    if(fileName != "" || !fileName.isNull())
+    {
+        std::vector<uint8_t> imageVect;
 
+        GifWriter g;
+        std::string stringFileName = fileName.toStdString();
+        stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
+        stringFileName.append("gif");
+        const char* charFileName = stringFileName.c_str();
+
+        GifBegin(&g, charFileName, size, size, 100);
+        for(int i = 0; i < pixelList.length(); i++)
+        {
+            GifWriteFrame(&g, pixelList.at(i).data(), size, size, 100);
+        }
+        GifEnd(&g);
+    }
 }
 
 void MainWindow::closeSprite()
@@ -322,4 +343,9 @@ void MainWindow::closeSprite()
 void MainWindow::openHelpMenu()
 {
     help->show();
+}
+
+void MainWindow::setSaved(bool saved)
+{
+    isSaved = saved;
 }
