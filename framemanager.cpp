@@ -72,13 +72,21 @@ void FrameManager::setupFrameManager()
 
 /**
  * @brief FrameManager::getFrames
- * @return
+ * Getter for the QVector of frames
  */
-QVector<QImage*> FrameManager::getFrames() {
+QVector<QImage*> FrameManager::getFrames()
+{
     return frames;
 }
 
-void FrameManager::setFrames(QVector<QImage*> newFrames) {
+/**
+ * @brief FrameManager::setFrames
+ * Sets the new frames given, into the
+ * the frames being used by all
+ */
+void FrameManager::setFrames(QVector<QImage*> newFrames)
+{
+    // Deletes the old frame pointers
     int origSize = frames.size();
     for(int i = 0; i < origSize; i++)
     {
@@ -87,17 +95,27 @@ void FrameManager::setFrames(QVector<QImage*> newFrames) {
        delete oldFrame;
     }
 
+    // Adds the new frames
     for(int i = 0; i < newFrames.size(); i++)
     {
         frames.push_back(newFrames[i]);
     }
 
+    // Setting values
     currFrame = 0;
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);
 }
 
-void FrameManager::setSize(int value) {
+/**
+ * @brief FrameManager::setSize
+ * Changes the size of the frames
+ * depending on what the user has
+ * picked
+ */
+void FrameManager::setSize(int value)
+{
+    // Expanding or limiting the size of the frames
     for(int i = 0; i < frames.size(); i++)
     {
         QImage* newImage = new QImage(QSize(value, value), QImage::Format_ARGB32);
@@ -110,21 +128,27 @@ void FrameManager::setSize(int value) {
             }
         }
 
+        // Clears garbage data
         if(value > oldImage->size().height())
         {
-            for(int j = 0; j < value; j++) {
-                for(int k = oldImage->size().height(); k < value; k++) {
+            for(int j = 0; j < value; j++)
+            {
+                for(int k = oldImage->size().height(); k < value; k++)
+                {
                     newImage->setPixelColor(j, k, QColor(0, 0, 0, 0));
                 }
             }
 
-            for(int j = oldImage->size().height(); j < value; j++) {
-                for(int k = 0; k < oldImage->size().height(); k++) {
+            for(int j = oldImage->size().height(); j < value; j++)
+            {
+                for(int k = 0; k < oldImage->size().height(); k++)
+                {
                     newImage->setPixelColor(j, k, QColor(0, 0, 0, 0));
                 }
             }
 
         }
+
         frames[i] = newImage;
         delete oldImage;
     }
@@ -133,21 +157,29 @@ void FrameManager::setSize(int value) {
     emit changeFrameStructure(frames);
 }
 
-/*********
- * Slot
- * ******/
-
+/**
+ * @brief FrameManager::addFrame
+ * Add a new frame to the QVector
+ * to work with
+ */
 void FrameManager::addFrame()
 {
+    // New QImage with transperant values
     QImage* newFrame = new QImage(frames[0]->size(), QImage::Format_ARGB32);
     QColor color(0, 0, 0, 0);
     newFrame->fill(color);
     frames.push_back(newFrame);
     currFrame = frames.size() - 1;
+
+    // Signals
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);
 }
 
+/**
+ * @brief FrameManager::deleteFrame
+ * Delete a frame from the QVector
+ */
 void FrameManager::deleteFrame()
 {
     if(frames.size() == 1)
@@ -161,14 +193,20 @@ void FrameManager::deleteFrame()
         currFrame--;
     }
 
+    // Signals
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);
 }
 
-void FrameManager::duplicateFrame() {
-
+/**
+ * @brief FrameManager::duplicateFrame
+ * Creates a duplicate frame, of the
+ * current frame that is selected
+ */
+void FrameManager::duplicateFrame()
+{
+    // Copying frame image over to new frame
     int size = frames[currFrame]->width();
-
     QImage *dupFrame = new QImage(QSize(size, size), QImage::Format_ARGB32);
     for (int i = 0; i < size; i++)
     {
@@ -178,12 +216,19 @@ void FrameManager::duplicateFrame() {
             dupFrame->setPixelColor(i, j, color);
         }
     }
+
+    // Add the new frame to the vector
     frames.push_back(dupFrame);
     currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);
 }
 
+/**
+ * @brief FrameManager::moveLeft
+ * Moves the current frame selection
+ * to the left
+ */
 void FrameManager::moveLeft()
 {
     if(currFrame == 0)
@@ -195,9 +240,15 @@ void FrameManager::moveLeft()
     emit changeCurrFrame(frames[currFrame]);
 }
 
+/**
+ * @brief FrameManager::moveRight
+ * Moves the current frame selection
+ * to the right
+ */
 void FrameManager::moveRight()
 {
-    if(currFrame == frames.size() - 1) {
+    if(currFrame == frames.size() - 1)
+    {
         return;
     }
     currFrame++;
@@ -205,26 +256,39 @@ void FrameManager::moveRight()
     emit changeCurrFrame(frames[currFrame]);
 }
 
-void FrameManager::update() {
+/**
+ * @brief FrameManager::update
+ * Updates the QVector frames
+ * whenenver they are being drawn
+ */
+void FrameManager::update()
+{
     QImage blankImage(frames[0]->size(), QImage::Format_ARGB32);
-    if(currFrame == 0 || currFrame == frames.size() - 1) {
+    if(currFrame == 0 || currFrame == frames.size() - 1)
+    {
         QColor newColor(0, 0, 0, 0);
         blankImage.fill(newColor);
     }
-    if(currFrame != 0) {
+
+    // Currframe checks
+    if(currFrame != 0)
+    {
         ui->prevLabel->setPixmap(QPixmap::fromImage(*frames[currFrame - 1]));
         ui->prevLabelNum->setText(QString::number(currFrame));
     }
-    else {
+    else
+    {
         ui->prevLabelNum->setText("");
         ui->prevLabel->setPixmap(QPixmap::fromImage(blankImage));
     }
 
-    if(currFrame < frames.size() - 1) {
+    if(currFrame < frames.size() - 1)
+    {
         ui->nextLabel->setPixmap(QPixmap::fromImage(*frames[currFrame + 1]));
         ui->nextLabelNum->setText(QString::number(currFrame + 2));
     }
-    else {
+    else
+    {
         ui->nextLabelNum->setText("");
         ui->nextLabel->setPixmap(QPixmap::fromImage(blankImage));
     }
