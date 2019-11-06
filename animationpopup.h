@@ -14,11 +14,16 @@ class AnimationPopup : public QWidget
 public:
     explicit AnimationPopup(QWidget *parent = nullptr);
     ~AnimationPopup();
-    void setFrames(std::vector<QImage*>);
+    void popupSetup(QVector<QImage*>, int);
 
 private:
     Ui::AnimationPopup *ui;
-    std::vector<QImage*> frames;
+    QVector<QImage*> frames;
+    QVector<QImage*> tempFrames;
+    int currFPS;
+    int currFrame;
+    void update();
+    void displayFrames();
 };
 
 #endif // ANIMATIONPOPUP_H

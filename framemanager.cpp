@@ -60,9 +60,10 @@ QVector<QImage*> FrameManager::getFrames() {
 }
 
 void FrameManager::setFrames(QVector<QImage*> newFrames) {
-    for(int i = 0; i < frames.size(); i++) {
+
+    for(int i = 0; i < frames.size(); i++)
        delete frames[i];
-    }
+
     for(int i = 0; i < newFrames.size(); i++)
         frames.push_back(newFrames[i]);
 }
@@ -112,8 +113,19 @@ void FrameManager::deleteFrame()
 }
 
 void FrameManager::duplicateFrame() {
-    QImage dupFrame = frames[currFrame]->copy(0, 0, frames[currFrame]->height(), frames[currFrame]->width());
-    frames.push_back(&dupFrame);
+
+    int size = frames[currFrame]->width();
+
+    QImage *dupFrame = new QImage(QSize(size, size), QImage::Format_ARGB32);
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            QColor color = frames[currFrame]->pixelColor(i,j);
+            dupFrame->setPixelColor(i, j, color);
+        }
+    }
+    frames.push_back(dupFrame);
     currFrame = frames.size() - 1;
     emit changeCurrFrame(frames[currFrame]);
     emit changeFrameStructure(frames);

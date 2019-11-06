@@ -22,6 +22,7 @@ public:
 
 public slots:
     void sliderMoved(int);
+    void actualViewPushed();
 private:
     QVector<QImage*> frames;
     QVector<QImage*> tempFrames;
