@@ -26,6 +26,7 @@
 #include <QPalette>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <QCloseEvent>
 
 /**
  * @brief MainWindow::MainWindow
@@ -497,4 +498,27 @@ void MainWindow::openHelpMenu()
 void MainWindow::setSaved(bool saved)
 {
     isSaved = saved;
+}
+
+/**
+ * @brief MainWindow::closeEvent
+ * Overrides the close event
+ * and asks the user if they
+ * have any unsaved changes
+ */
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(!isSaved)
+    {
+        QMessageBox warning;
+        warning.setStandardButtons(QMessageBox::Save | QMessageBox::No);
+        warning.setInformativeText("Unsaved Changes, would you like to save?");
+        int ret = warning.exec();
+
+        if(ret == QMessageBox::Save)
+        {
+            saveSprite();
+        }
+        event->accept();
+    }
 }

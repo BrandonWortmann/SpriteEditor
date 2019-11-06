@@ -66,6 +66,7 @@ private:
     HelpPopup *help;
     QString fileName;
     QList<QVector<uint8_t>> pixelList;
+    void closeEvent(QCloseEvent *event);
 
 };
 #endif // MAINWINDOW_H
