@@ -324,7 +324,7 @@ void MainWindow::saveAsSprite()
 {
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
     if(!fname.isNull() || fname != "")
-    {
+    {      
         fileName = fname;
         saveSprite();
     }

@@ -18,7 +18,7 @@ public:
     ~ToolBar();
     Ui::ToolBar *ui;
     QColor defaultColor;
-    SizePopup *p;
+    SizePopup *popUp;
 
    void closeSize();
    void setBtnColor(QColor);
