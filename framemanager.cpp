@@ -65,7 +65,7 @@ void FrameManager::setFrames(QVector<QImage*> newFrames) {
     {
        QImage* oldFrame = frames[0];
        frames.remove(0);
-     //  delete oldFrame;
+       delete oldFrame;
     }
 
     for(int i = 0; i < newFrames.size(); i++)
