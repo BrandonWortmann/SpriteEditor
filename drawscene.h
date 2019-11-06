@@ -41,7 +41,6 @@ private:
     QPoint prevCursor;
     enum Tool{pencil, hand, eraser, bucket, undefined};
     Tool tool;
-
     void addPoint(QPoint point, bool restore);
     void fill(QPoint point);
     void fillHelper(QPoint point, QColor currColor);

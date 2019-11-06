@@ -473,18 +473,7 @@ void MainWindow::exportSprite()
  */
 void MainWindow::closeSprite()
 {
-    if(!isSaved)
-    {
-        // Asks the user if they would like to save
-        QMessageBox warning;
-        warning.setStandardButtons(QMessageBox::Save | QMessageBox::No);
-        int ret = warning.exec();
 
-        if(ret == QMessageBox::Save)
-        {
-            saveSprite();
-        }
-    }
     this->close();
 }
 

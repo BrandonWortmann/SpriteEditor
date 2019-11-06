@@ -17,6 +17,11 @@
 #include <stdio.h>
 
 using namespace std;
+
+/**
+ * @brief FrameManager::FrameManager
+ * Sets up the UI
+ */
 FrameManager::FrameManager(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrameManager)
@@ -24,13 +29,23 @@ FrameManager::FrameManager(QWidget *parent) :
     ui->setupUi(this);
 }
 
+/**
+ * @brief FrameManager::~FrameManager
+ * Deletes UI
+ */
 FrameManager::~FrameManager()
 {
     delete ui;
 }
 
+/**
+ * @brief FrameManager::setupFrameManager
+ * Sets up all the functionality for the
+ * frameManager. Frame color, and connections
+ */
 void FrameManager::setupFrameManager()
 {
+    // Intial image set to transperant background
     QImage* startingImage = new QImage(QSize(64, 64), QImage::Format_ARGB32);
     QColor color(0, 0, 0, 0);
     startingImage->fill(color);
@@ -38,21 +53,11 @@ void FrameManager::setupFrameManager()
     currFrame = 0;
     ui->currLabelNum->setText("0");
 
-
-
-    QImage* image1 = new QImage("../SpriteEditor/icons/goofy.png");
-    QImage* image2 = new QImage("../SpriteEditor/icons/pencil.png");
-    QImage* image3 = new QImage("../SpriteEditor/icons/papafranku.png");
-    ui->prevLabel->setPixmap(QPixmap::fromImage(*image1));
-    ui->prevLabel->setScaledContents(true);
-    ui->currLabel->setPixmap(QPixmap::fromImage(*image2));
-    ui->currLabel->setScaledContents(true);
-    ui->nextLabel->setPixmap(QPixmap::fromImage(*image3));
-    ui->nextLabel->setScaledContents(true);
-
+    // Sends the current frame to DrawFrame
     emit changeCurrFrame(startingImage);
     update();
 
+    // Connection for actions when a button is pushed
     connect(ui->newFrameButton, &QPushButton::pressed,
             this, &FrameManager::addFrame);
     connect(ui->deleteFrameButton, &QPushButton::pressed,
@@ -65,6 +70,10 @@ void FrameManager::setupFrameManager()
             this, &FrameManager::duplicateFrame);
 }
 
+/**
+ * @brief FrameManager::getFrames
+ * @return
+ */
 QVector<QImage*> FrameManager::getFrames() {
     return frames;
 }
