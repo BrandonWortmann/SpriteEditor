@@ -1,3 +1,14 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  mainwindow.cpp                              *
+ *  UI and view thatestablishes connections.    *
+ *                                              *
+ ************************************************/
+
+
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "gif.h"
@@ -414,7 +425,7 @@ void MainWindow::saveAsSprite()
 {
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
     if(!fname.isNull() || fname != "")
-    {
+    {      
         fileName = fname;
         saveSprite();
     }

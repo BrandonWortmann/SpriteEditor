@@ -1,3 +1,14 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  sizepopup.cpp                               *
+ *  Widget that displays comboBox for size      *
+ *  selection.                                  *
+ *                                              *
+ ************************************************/
+
 #include "sizepopup.h"
 #include "ui_sizepopup.h"
 #include <QPushButton>

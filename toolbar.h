@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for toolbar                     *
+ *                                              *
+ ************************************************/
+
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
@@ -18,7 +27,7 @@ public:
     ~ToolBar();
     Ui::ToolBar *ui;
     QColor defaultColor;
-    SizePopup *p;
+    SizePopup *popUp;
 
    void closeSize();
    void setBtnColor(QColor);
