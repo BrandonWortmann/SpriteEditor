@@ -16,4 +16,4 @@ The main purpose boils down to allowing a user to draw multiple frames of sprite
 can be shown sequentially to create an animation. These animations can be exported as GIFs or saved
 as an ssp (Sprite File). There is a useful selection of tools to make doing so simple and intuitive.
 
-To export to a gif we used gif.h provided by charlietangora
+To export to a gif we used gif.h provided by charlietangora.
