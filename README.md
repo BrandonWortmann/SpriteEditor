@@ -3,7 +3,7 @@ Wasted Potential's Sprite Editor
 
 Group:     Wasted Potential
 
-Memebers:  Jose Monterroso, Andrew Fraser, Nick Nord, Ben Charlesworth, Brandon Wortmann, Dhanpaul Nandkeshwar
+Members:   Jose Monterroso, Andrew Fraser, Nick Nord, Ben Charlesworth, Brandon Wortmann, Dhanpaul Nandkeshwar
 
 Date:      November 5, 2019
 
