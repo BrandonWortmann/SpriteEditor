@@ -2,8 +2,11 @@
 Wasted Potential's Sprite Editor
 
 Group:     Wasted Potential
+
 Memebers:  Jose Monterroso, Andrew Fraser, Nick Nord, Ben Charlesworth, Brandon Wortmann, Dhanpaul Nandkeshwar
+
 Date:      November 5, 2019
+
 Course:    CS 3505, University of Utah, School of Computing
 
 Comments:
