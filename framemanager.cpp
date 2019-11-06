@@ -102,10 +102,28 @@ void FrameManager::setSize(int value) {
     {
         QImage* newImage = new QImage(QSize(value, value), QImage::Format_ARGB32);
         QImage* oldImage = frames[i];
-        for(int j = 0; j < value && j < oldImage->size().height(); j++) {
-            for(int k = 0; k < value && k < oldImage->size().width(); k++) {
+        for(int j = 0; j < value && j < oldImage->size().height(); j++)
+        {
+            for(int k = 0; k < value && k < oldImage->size().width(); k++)
+            {
                 newImage->setPixelColor(j, k, oldImage->pixelColor(j, k));
             }
+        }
+
+        if(value > oldImage->size().height())
+        {
+            for(int j = 0; j < value; j++) {
+                for(int k = oldImage->size().height(); k < value; k++) {
+                    newImage->setPixelColor(j, k, QColor(0, 0, 0, 0));
+                }
+            }
+
+            for(int j = oldImage->size().height(); j < value; j++) {
+                for(int k = 0; k < oldImage->size().height(); k++) {
+                    newImage->setPixelColor(j, k, QColor(0, 0, 0, 0));
+                }
+            }
+
         }
         frames[i] = newImage;
         delete oldImage;
