@@ -57,6 +57,11 @@ void AnimationPreview::update()
 }
 
 void AnimationPreview::displayFrames() {
+    if(tempFrames != frames) {
+        QTimer::singleShot(5, this, &AnimationPreview::update);
+        return;
+    }
+
     ui->displayLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
     currFrame++;
     if(currFrame == tempFrames.size()) {
