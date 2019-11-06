@@ -27,6 +27,7 @@
 #include <QJsonObject>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <string>
 
 /**
  * @brief MainWindow::MainWindow
@@ -53,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     drawFrame->ui->setupUi(ui->dfWidge);
     drawFrame->setupFrame();
 
-    QColor black(0,0,0,255);
+    QColor black(255,0,0,0);
     toolBar->setBtnColor(black);
 
     // Showing images for frames in qt
@@ -376,20 +377,18 @@ void MainWindow::saveSprite()
             for(int j = 0; j < int(size); j++)
             {
                 QImage *img = imgVect.at(frameNum);
-                QRgb rgba = img->pixel(j,i);
+                QColor color = img->pixelColor(j,i);
                 QJsonArray rgbaValues;
 
-                // Storing RGBA values to .ssp file
-                rgbaValues.append(QJsonValue(qRed(rgba)));
-                rgbaValues.append(QJsonValue(qGreen(rgba)));
-                rgbaValues.append(QJsonValue(qBlue(rgba)));
-                rgbaValues.append(QJsonValue(qAlpha(rgba)));
+                rgbaValues.append(QJsonValue(color.red()));
+                rgbaValues.append(QJsonValue(color.green()));
+                rgbaValues.append(QJsonValue(color.blue()));
+                rgbaValues.append(QJsonValue(color.alpha()));
 
-                // Storing RGBA values to export to a .gif
-                pixelVect.append(static_cast<uint8_t>(qRed(rgba)));
-                pixelVect.append(static_cast<uint8_t>(qGreen(rgba)));
-                pixelVect.append(static_cast<uint8_t>(qBlue(rgba)));
-                pixelVect.append(static_cast<uint8_t>(qAlpha(rgba)));
+                pixelVect.append(static_cast<uint8_t>(color.red()));
+                pixelVect.append(static_cast<uint8_t>(color.green()));
+                pixelVect.append(static_cast<uint8_t>(color.blue()));
+                pixelVect.append(static_cast<uint8_t>(color.alpha()));
 
                 colArray.append(rgbaValues);
             }
@@ -426,7 +425,17 @@ void MainWindow::saveAsSprite()
 {
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
     if(!fname.isNull() || fname != "")
-    {      
+    {
+        // Adding extension if the user does not add one
+        std::string filePath = fname.toStdString();
+        filePath = filePath.substr(filePath.length() - 3, filePath.length());
+
+        if(filePath != "ssp")
+        {
+            QString ext = ".ssp";
+            fname = fname + ext;
+        }
+
         fileName = fname;
         saveSprite();
     }

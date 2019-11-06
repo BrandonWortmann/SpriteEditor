@@ -20,7 +20,7 @@ DrawScene::DrawScene(QWidget* parent) :QGraphicsScene(parent)
     prevPoint.setX(0);
     prevPoint.setY(0);
     pencilSize = 0;
-    color = Qt::black;
+    color = Qt::red;
     mousePressed = false;
     setSceneRect(0, 0, 514, 514);
     grid = false;
