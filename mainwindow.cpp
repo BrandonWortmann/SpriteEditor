@@ -317,7 +317,7 @@ void MainWindow::openSprite()
         // Acquiring necessary data from the Json to create a QImage
         QVector<QImage*> sprite;
         for(int frameNum = 0; frameNum < numberOfFrames; frameNum++)
-         {
+        {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
             QImage* img = new QImage(QSize(int(size), int(size)), QImage::Format_ARGB32);

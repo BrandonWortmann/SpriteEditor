@@ -26,6 +26,7 @@ public:
 
 private:
     Ui::HelpPopup *ui;
+
 };
 
 #endif // HELPPOPUP_H

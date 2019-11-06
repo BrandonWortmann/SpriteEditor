@@ -1,3 +1,13 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  animationpreview.cpp, handles all the       *
+ *  sprite animation                            *
+ *                                              *
+ ************************************************/
+
 #include "animationpreview.h"
 #include "ui_animationpreview.h"
 #include <QAbstractSlider>

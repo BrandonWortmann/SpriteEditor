@@ -1,9 +1,12 @@
-/**
- *
- * This controls everything for the DrawFrame.
- *
- * Author: Wasted Potential
- */
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  drawscene.cpp, this controls everything     *
+ *  for the drawframe                           *
+ *                                              *
+ ************************************************/
 
 #include "drawscene.h"
 #include <cmath>

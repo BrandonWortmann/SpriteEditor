@@ -30,16 +30,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    HelpPopup *help;
-    QString fileName;
-
-    QList<QVector<uint8_t>> pixelList;
-    uint size;
-    bool isSaved;
-
-
 public slots:
-    // drawFrame
     void setColor(QColor);
     void setSize(int);
     void setTool(int);
@@ -47,12 +38,8 @@ public slots:
     void toggleGrid();
     void toggleZoomIn();
     void toggleZoomOut();
-
-    // frameManager
     void changeCurrFrame(QImage*);
     void changeFrameStructure(QVector<QImage*>);
-
-    // mainWindow
     void newSprite();
     void openSprite();
     void saveSprite();
@@ -64,13 +51,9 @@ public slots:
 
 
 signals:
-    // drawFrame
     void colorSelected();
     void sizeSelected();
-
-    // new drawFrame (I think this would be a drawFrame method, not sure though)
     void newFrameSelected(QImage*);
-
 
 private:
     Ui::MainWindow *ui;
@@ -78,6 +61,11 @@ private:
     FrameManager* frameManager;
     DrawFrame* drawFrame;
     AnimationPreview* animationPreview;
+    uint size;
+    bool isSaved;
+    HelpPopup *help;
+    QString fileName;
+    QList<QVector<uint8_t>> pixelList;
 
 };
 #endif // MAINWINDOW_H

@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  animationpopup.cpp, animation popup window  *
+ *                                              *
+ ************************************************/
+
 #include "animationpopup.h"
 #include "ui_animationpopup.h"
 

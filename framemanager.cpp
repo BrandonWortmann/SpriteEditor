@@ -1,3 +1,13 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  framemanager.cpp, manages the sprite        *
+ *  frames. Central hub for frame storage       *
+ *                                              *
+ ************************************************/
+
 #include "framemanager.h"
 #include "ui_framemanager.h"
 #include <QPixmap>
