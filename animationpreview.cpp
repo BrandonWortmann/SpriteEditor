@@ -30,6 +30,8 @@ void AnimationPreview::setupAnimationPreview(QVector<QImage*> startingFrames)
 
     connect(ui->fpsSlider, &QAbstractSlider::sliderMoved,
             this, &AnimationPreview::sliderMoved);
+    connect(ui->actualViewButton, &QPushButton::pressed,
+            this, &AnimationPreview::actualViewPushed);
 }
 
 AnimationPreview::~AnimationPreview()
@@ -43,6 +45,12 @@ void AnimationPreview::sliderMoved(int value)
     ui->fpsLabel->setText("FPS: " + QString::number(value));
 }
 
+void AnimationPreview::actualViewPushed() {
+
+    animPop->popupSetup(frames, ui->fpsSlider->value());
+    animPop->show();
+}
+
 void AnimationPreview::setFrames(QVector<QImage*> frameVector)
 {
     frames = frameVector;
@@ -50,20 +58,9 @@ void AnimationPreview::setFrames(QVector<QImage*> frameVector)
 
 void AnimationPreview::update()
 {
-
     currFrame = 0;
     tempFrames = frames;
     QTimer::singleShot(5, this, &AnimationPreview::displayFrames);
-
-//    while(true) {
-//        QVector<QImage*>* tempFrames = frames;
-//        while(tempFrames == frames) {
-//            for(size_t i = 0; i < tempFrames->size(); i++) {
-//                ui->displayLabel->setPixmap(QPixmap::fromImage(*((*tempFrames)[i])));
-
-//            }
-//        }
-//    }
 }
 
 void AnimationPreview::displayFrames() {
