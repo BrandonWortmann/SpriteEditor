@@ -45,10 +45,15 @@ void AnimationPreview::sliderMoved(int value)
     ui->fpsLabel->setText("FPS: " + QString::number(value));
 }
 
-void AnimationPreview::actualViewPushed() {
+void AnimationPreview::actualViewPushed()
+{
+    if(animPop->isVisible()) {
+        return;
+    }
 
     animPop->popupSetup(frames, ui->fpsSlider->value());
     animPop->show();
+    animPop->update();
 }
 
 void AnimationPreview::setFrames(QVector<QImage*> frameVector)

@@ -26,7 +26,6 @@ AnimationPopup::~AnimationPopup()
 void AnimationPopup::popupSetup(QVector<QImage*> newFrames, int fps) {
     frames = newFrames;
     currFPS = fps;
-    update();
 }
 
 void AnimationPopup::update()
@@ -37,7 +36,12 @@ void AnimationPopup::update()
 }
 
 void AnimationPopup::displayFrames() {
-   ui->popupLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
+
+    if(!this->isVisible()) {
+        return;
+    }
+
+    ui->popupLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
     currFrame++;
     if(currFrame == tempFrames.size()) {
         QTimer::singleShot(int (1000.0 / currFPS/*ui->fpsLabel->text().split(" ")[1].toInt()*/), this, &AnimationPopup::update);

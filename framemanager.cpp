@@ -89,10 +89,16 @@ void FrameManager::setFrames(QVector<QImage*> newFrames) {
 }
 
 void FrameManager::setSize(int value) {
-    for(int i = 0; i < frames.size(); i++) {
-        QImage newImage = frames[i]->scaled(value, value, Qt::KeepAspectRatio);
+    for(int i = 0; i < frames.size(); i++)
+    {
+        QImage* newImage = new QImage(QSize(value, value), QImage::Format_ARGB32);
         QImage* oldImage = frames[i];
-        frames[i] = &newImage;
+        for(int j = 0; j < value && j < oldImage->size().height(); j++) {
+            for(int k = 0; k < value && k < oldImage->size().width(); k++) {
+                newImage->setPixelColor(j, k, oldImage->pixelColor(j, k));
+            }
+        }
+        frames[i] = newImage;
         delete oldImage;
     }
 
