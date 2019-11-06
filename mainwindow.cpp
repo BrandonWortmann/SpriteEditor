@@ -1,3 +1,14 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  mainwindow.cpp                              *
+ *  UI and view thatestablishes connections.    *
+ *                                              *
+ ************************************************/
+
+
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "gif.h"

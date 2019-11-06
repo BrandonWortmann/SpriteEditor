@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for toolbar                     *
+ *                                              *
+ ************************************************/
+
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 

@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for helppopup                   *
+ *                                              *
+ ************************************************/
+
 #ifndef HELPPOPUP_H
 #define HELPPOPUP_H
 

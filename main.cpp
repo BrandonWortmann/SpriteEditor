@@ -1,3 +1,14 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  main.cpp                                    *
+ *  Underlying application that runs the        *
+ *  mainwindow UI.                              *
+ *                                              *
+ ************************************************/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QApplication>

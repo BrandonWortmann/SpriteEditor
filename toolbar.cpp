@@ -1,8 +1,20 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  toolbar.cpp                                 *
+ *  UI for toolbar that manages button events.  *
+ *  Handles the color and size popups.          *
+ *                                              *
+ ************************************************/
+
 #include "toolbar.h"
 #include "ui_toolbar.h"
 #include "ui_sizepopup.h"
 #include <QColor>
 #include <QComboBox>
+#include "sizepopup.h"
 #include <QPalette>
 
 /**
