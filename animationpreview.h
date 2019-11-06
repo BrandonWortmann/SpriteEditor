@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for AnimationPreview            *
+ *                                              *
+ ************************************************/
+
 #ifndef ANIMATIONPREVIEW_H
 #define ANIMATIONPREVIEW_H
 
@@ -18,7 +27,6 @@ public:
     Ui::AnimationPreview *ui;
     void setupAnimationPreview(QVector<QImage*>);
     void setFrames(QVector<QImage*>);
-
 
 public slots:
     void sliderMoved(int);

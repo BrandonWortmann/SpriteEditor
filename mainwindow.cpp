@@ -1,3 +1,14 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  mainwindow.cpp                              *
+ *  UI and view thatestablishes connections.    *
+ *                                              *
+ ************************************************/
+
+
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "gif.h"
@@ -246,7 +257,7 @@ void MainWindow::newSprite()
     // New frames, fills frame to white
     QVector<QImage*> pic;
     QImage *img = new QImage(QSize(64, 64), QImage::Format_ARGB32);
-    QColor color(255, 255, 255, 255);
+    QColor color(0, 0, 0, 0);
     for (int i = 0; i < 64; i++)
     {
         for (int j = 0; j < 64; j++)
@@ -259,12 +270,17 @@ void MainWindow::newSprite()
     frameManager->setFrames(pic);
 }
 
+/**
+ * @brief MainWindow::openSprite
+ * Opens a stored sprite. Popup
+ * that asks the user to select
+ * the .ssp file
+ */
 void MainWindow::openSprite()
 {
-
+    // Asks the user to select a .ssp file
     QString fname = QFileDialog::getOpenFileName(this, tr("OpenSprite"), "", tr("Sprite Files (*.ssp)"));
     fileName = fname;
-    std::string convert = fname.toStdString();
     QFile file(fname);
     QString allText;
     QMessageBox errorMsg;
@@ -275,49 +291,49 @@ void MainWindow::openSprite()
         allText = file.readAll();
         file.close();
 
+        // Converting to a Json Document and verifying a legit document
         QJsonDocument jsonDoc = QJsonDocument::fromJson(allText.toUtf8());
-
         if(jsonDoc.isNull() || !jsonDoc.isObject())
-              {
-                  //TODO - Popup for file error (wrong format)
-                errorMsg.setInformativeText("File selected does not match format.");
-                errorMsg.exec();
-                return;
-              }
-              QJsonObject jsonObj = jsonDoc.object();
-              if(jsonObj.isEmpty())
-              {
-                  //TODO - Popup for file error (file empty)
-                  errorMsg.setInformativeText("file selected is empty.");
-                  errorMsg.exec();
-                  return;
-              }
+        {
+            errorMsg.setInformativeText("File selected does not match format.");
+            errorMsg.exec();
+            return;
+        }
 
+        // Converting to a Json Object and veriying a legit Json Object
+        QJsonObject jsonObj = jsonDoc.object();
+        if(jsonObj.isEmpty())
+        {
+            errorMsg.setInformativeText("file selected is empty.");
+            errorMsg.exec();
+            return;
+        }
+
+        // Storing necessary values from the Json
         size = uint(jsonObj["height"].toInt());
-
         int numberOfFrames = jsonObj["numberOfFrames"].toInt();
         QJsonObject frames = jsonObj["frames"].toObject();
 
-        //temporary variable. replace later
+        // Acquiring necessary data from the Json to create a QImage
         QVector<QImage*> sprite;
-
         for(int frameNum = 0; frameNum < numberOfFrames; frameNum++)
-         {
+        {
             QString frameNumber = "frame" + QString::number(frameNum);
             QJsonArray overallArr = frames[frameNumber].toArray();
             QImage* img = new QImage(QSize(int(size), int(size)), QImage::Format_ARGB32);
-
-            for( int i = 0; i < int(size); i++)
+            for(int i = 0; i < int(size); i++)
             {
                 QJsonArray rowArr = overallArr.at(i).toArray();
-                for( int j = 0; j < int(size); j++)
+                for(int j = 0; j < int(size); j++)
                 {
+                    // Exctrating RGBA values
                     QJsonArray rgbaValues = rowArr.at(j).toArray();
                     int red = rgbaValues.at(0).toInt();
                     int green = rgbaValues.at(1).toInt();
                     int blue = rgbaValues.at(2).toInt();
                     int alpha = rgbaValues.at(3).toInt();
 
+                    // Setting Pixel Color
                     QColor color(red, green, blue, alpha);
                     img->setPixelColor(j, i, color);
                 }
@@ -328,6 +344,13 @@ void MainWindow::openSprite()
     }
 }
 
+/**
+ * @brief MainWindow::saveSprite
+ * Saving the current sprite
+ * The user should have already
+ * picked a file saving location.
+ * Saves to the same file
+ */
 void MainWindow::saveSprite()
 {
     if(fileName.isNull() || fileName == "")
@@ -339,13 +362,13 @@ void MainWindow::saveSprite()
     QJsonObject frames;
     QVector<QImage*> imgVect = frameManager->getFrames();
 
+    // Itterating over all the frames to store pixel RGBA values
     for(int frameNum = 0; frameNum < imgVect.length(); frameNum++)
     {
         QJsonArray overallArray;
         QString frameNumber = "frame" + QString::number(frameNum);
         QJsonArray rowArr;
-        QVector<uint8_t> pixelVect(size*4);
-
+        QVector<uint8_t> pixelVect(int(size)*4);
         for(int i = 0; i < int(size); i++)
         {
             QJsonArray colArray;
@@ -354,15 +377,18 @@ void MainWindow::saveSprite()
                 QImage *img = imgVect.at(frameNum);
                 QRgb rgba = img->pixel(j,i);
                 QJsonArray rgbaValues;
+
+                // Storing RGBA values to .ssp file
                 rgbaValues.append(QJsonValue(qRed(rgba)));
                 rgbaValues.append(QJsonValue(qGreen(rgba)));
                 rgbaValues.append(QJsonValue(qBlue(rgba)));
                 rgbaValues.append(QJsonValue(qAlpha(rgba)));
 
-                pixelVect.append((uint8_t)qRed(rgba));
-                pixelVect.append((uint8_t)qGreen(rgba));
-                pixelVect.append((uint8_t)qBlue(rgba));
-                pixelVect.append((uint8_t)qAlpha(rgba));
+                // Storing RGBA values to export to a .gif
+                pixelVect.append(static_cast<uint8_t>(qRed(rgba)));
+                pixelVect.append(static_cast<uint8_t>(qGreen(rgba)));
+                pixelVect.append(static_cast<uint8_t>(qBlue(rgba)));
+                pixelVect.append(static_cast<uint8_t>(qAlpha(rgba)));
 
                 colArray.append(rgbaValues);
             }
@@ -372,40 +398,57 @@ void MainWindow::saveSprite()
         pixelList.append(pixelVect);
         frames[frameNumber] = overallArray;
     }
+
+    // Storing to Json Object
     sprite["frames"] = frames;
     sprite["numberOfFrames"] = imgVect.length();
     sprite["width"] = int(size);
     sprite["height"] = int(size);
 
-
+    // Storing to a Json Document
     QJsonDocument savedDoc(sprite);
     savedDoc.toJson(QJsonDocument::Indented);
+
+    // Saving the File
     QFile saveFile(fileName);
     saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
     saveFile.write(savedDoc.toJson(QJsonDocument::Indented));
     setSaved(true);
-
 }
 
+/**
+ * @brief MainWindow::saveAsSprite
+ * The user picks a file location
+ * and a json .ssp file is created
+ */
 void MainWindow::saveAsSprite()
 {
     QString fname = QFileDialog::getSaveFileName(this, tr("OpenSprite"), "", tr("Sprite File (*.ssp)"));
     if(!fname.isNull() || fname != "")
-    {
+    {      
         fileName = fname;
         saveSprite();
     }
 }
 
+/**
+ * @brief MainWindow::exportSprite
+ * Saves the current file and exports
+ * it to a .gif format. File is exported
+ * to the same location as the .ssp file
+ */
 void MainWindow::exportSprite()
 {
     saveSprite();
+
+    // GifWriter set up
     GifWriter g;
     std::string stringFileName = fileName.toStdString();
     stringFileName = stringFileName.substr(0,stringFileName.length() - 3);
     stringFileName.append("gif");
     const char* charFileName = stringFileName.c_str();
 
+    // Constructing and saving the .gif file
     GifBegin(&g, charFileName, size, size, 50);
     for(int i = 0; i < pixelList.length(); i++)
     {
@@ -414,23 +457,43 @@ void MainWindow::exportSprite()
     GifEnd(&g);
 }
 
+/**
+ * @brief MainWindow::closeSprite
+ * Closes the sprite editor
+ */
 void MainWindow::closeSprite()
 {
-    QMessageBox warning;
-    warning.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
-    int ret = warning.exec();
-    if(ret == QMessageBox::Save)
+    if(!isSaved)
     {
-        saveSprite();
+        // Asks the user if they would like to save
+        QMessageBox warning;
+        warning.setStandardButtons(QMessageBox::Save | QMessageBox::No);
+        int ret = warning.exec();
+
+        if(ret == QMessageBox::Save)
+        {
+            saveSprite();
+        }
     }
     this->close();
 }
 
+/**
+ * @brief MainWindow::openHelpMenu
+ * When called this method will
+ * open the helpMenu popup
+ */
 void MainWindow::openHelpMenu()
 {
     help->show();
 }
 
+/**
+ * @brief MainWindow::setSaved
+ * Setter for isSaved boolean
+ * Documents whether the current
+ * sprite has been recently saved
+ */
 void MainWindow::setSaved(bool saved)
 {
     isSaved = saved;

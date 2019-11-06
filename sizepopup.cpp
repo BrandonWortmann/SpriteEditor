@@ -1,10 +1,26 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  sizepopup.cpp                               *
+ *  Widget that displays comboBox for size      *
+ *  selection.                                  *
+ *                                              *
+ ************************************************/
+
 #include "sizepopup.h"
 #include "ui_sizepopup.h"
 #include <QPushButton>
 #include <QComboBox>
-#include <iostream>
 #include "toolbar.h"
 
+/**
+ * @brief SizePopup::SizePopup
+ * Initializes the popup menu
+ * for when the user chooses
+ * the size of the sprite frame
+ */
 SizePopup::SizePopup(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SizePopup)
@@ -17,6 +33,9 @@ SizePopup::SizePopup(QWidget *parent) :
 
 }
 
+/**
+ * @brief SizePopup::~SizePopup
+ */
 SizePopup::~SizePopup()
 {
     delete ui;

@@ -1,3 +1,13 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  framemanager.cpp, manages the sprite        *
+ *  frames. Central hub for frame storage       *
+ *                                              *
+ ************************************************/
+
 #include "framemanager.h"
 #include "ui_framemanager.h"
 #include <QPixmap>
@@ -60,12 +70,22 @@ QVector<QImage*> FrameManager::getFrames() {
 }
 
 void FrameManager::setFrames(QVector<QImage*> newFrames) {
-
-    for(int i = 0; i < frames.size(); i++)
-       delete frames[i];
+    int origSize = frames.size();
+    for(int i = 0; i < origSize; i++)
+    {
+       QImage* oldFrame = frames[0];
+       frames.remove(0);
+       delete oldFrame;
+    }
 
     for(int i = 0; i < newFrames.size(); i++)
+    {
         frames.push_back(newFrames[i]);
+    }
+
+    currFrame = 0;
+    emit changeCurrFrame(frames[currFrame]);
+    emit changeFrameStructure(frames);
 }
 
 void FrameManager::setSize(int value) {

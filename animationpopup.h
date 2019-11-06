@@ -1,3 +1,12 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for AnimationPopup              *
+ *                                              *
+ ************************************************/
+
 #ifndef ANIMATIONPOPUP_H
 #define ANIMATIONPOPUP_H
 

@@ -1,11 +1,28 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  helppopup.cpp                               *
+ *  Widget that provides a brief how-to guide   *
+ *  for navigating UI.                          *
+ *                                              *
+ ************************************************/
+
 #include "helppopup.h"
 #include "ui_helppopup.h"
 
+/**
+ * @brief HelpPopup::HelpPopup
+ * This widget is opened from the menu bar, and provides help creating a sprite
+ * and a brief explanation of how to naviage the UI.
+ */
 HelpPopup::HelpPopup(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::HelpPopup)
 {
     ui->setupUi(this);
+
     ui->createText->setText("Welcome to \"Wasted Potential's\" Sprite editor! \n\nTo start creating your own sprite, "
         "select the pencil tool and click and hold anywhere on the draw panel to make changes. If you want to open"
         " an existing sprite, click on the file menu bar and select the open drop down menu option. Then choose a valid .ssp file."
@@ -27,10 +44,12 @@ HelpPopup::HelpPopup(QWidget *parent) :
          " to control the current frame they want to edit as well as create new frames and delete unwanted frames. ");
 }
 
+/**
+ * @brief HelpPopup::~HelpPopup
+ * deletes the helpPopup from the heap
+ */
 HelpPopup::~HelpPopup()
 {
     delete ui;
 }
-
-//TO DO - WRITE HELPFUL DESCRIPTIONS
 

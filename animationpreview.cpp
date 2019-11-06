@@ -1,3 +1,13 @@
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  animationpreview.cpp, handles all the       *
+ *  sprite animation                            *
+ *                                              *
+ ************************************************/
+
 #include "animationpreview.h"
 #include "ui_animationpreview.h"
 #include <QAbstractSlider>
@@ -54,6 +64,11 @@ void AnimationPreview::update()
 }
 
 void AnimationPreview::displayFrames() {
+    if(tempFrames != frames) {
+        QTimer::singleShot(5, this, &AnimationPreview::update);
+        return;
+    }
+
     ui->displayLabel->setPixmap(QPixmap::fromImage(*tempFrames[currFrame]));
     currFrame++;
     if(currFrame == tempFrames.size()) {

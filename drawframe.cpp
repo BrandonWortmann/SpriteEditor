@@ -1,8 +1,13 @@
-/*
- * The DrawFramw class holds the draw scene, and allows the user to make and edit sprites
- * Author: Wasted Potential
-*/
-
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  drawframe.cpp, class holds the draw         *
+ *  scence, and allows the user to make         *
+ *  and edit sprites                            *
+ *                                              *
+ ************************************************/
 
 #include "drawframe.h"
 #include "ui_drawframe.h"

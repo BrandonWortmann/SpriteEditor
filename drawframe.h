@@ -1,7 +1,11 @@
-/*
- * The header file for the DrawFrame class
- * Author: Wasted Potential
-*/
+/************************************************
+ *      A8 - Sprite Editor                      *
+ *  Author: Wasted Potential                    *
+ *  CS 3505                                     *
+ *                                              *
+ *  header file for DrawFrame                   *
+ *                                              *
+ ************************************************/
 
 #ifndef DRAWFRAME_H
 #define DRAWFRAME_H
@@ -29,6 +33,7 @@ public:
     void setFrame(QImage* frame);
     void setTool(int);
     DrawScene* drawScene;
+
 };
 
 #endif // DRAWFRAME_H
